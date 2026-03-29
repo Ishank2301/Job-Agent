@@ -1,0 +1,66 @@
+# ─── Environment & Secrets ────────────────────────────────────────────────────
+.env
+*.env
+.env.local
+.env.production
+
+# ─── Python ───────────────────────────────────────────────────────────────────
+__pycache__/
+*.py[cod]
+*.pyo
+*.pyd
+.Python
+*.egg
+*.egg-info/
+dist/
+build/
+.eggs/
+pip-wheel-metadata/
+
+# ─── Virtual Environments ─────────────────────────────────────────────────────
+venv/
+.venv/
+env/
+ENV/
+
+# ─── Job Agent Data (personal & sensitive) ────────────────────────────────────
+data/applications/
+data/jobs/
+data/logs/
+data/resumes/tailored/
+
+# Keep the base resume template and folder structure
+!data/resumes/base_resume.txt
+!data/resumes/.gitkeep
+!data/applications/.gitkeep
+!data/jobs/.gitkeep
+!data/logs/.gitkeep
+
+# ─── Embeddings & ML Artifacts ────────────────────────────────────────────────
+embeddings/
+*.faiss
+*.pkl
+*.index
+mlruns/
+
+# ─── IDE & Editor ─────────────────────────────────────────────────────────────
+.vscode/
+.idea/
+*.swp
+*.swo
+.DS_Store
+Thumbs.db
+
+# ─── Testing & Coverage ───────────────────────────────────────────────────────
+.pytest_cache/
+.coverage
+coverage.xml
+htmlcov/
+
+# ─── Jupyter ──────────────────────────────────────────────────────────────────
+.ipynb_checkpoints/
+*.ipynb
+
+# ─── Logs ─────────────────────────────────────────────────────────────────────
+*.log
+logs/

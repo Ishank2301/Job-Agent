@@ -2,7 +2,7 @@
 
 > A fully automated job hunting agent that scrapes jobs, tailors your resume, finds recruiter contacts, and sends personalized cold emails — **you do nothing**.
 
----
+
 
 ## 🧠 How It Works
 

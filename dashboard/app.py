@@ -1,7 +1,4 @@
-"""
-Job Agent — Monitoring Dashboard
-Real-time view of applications, job matches, and agent status.
-"""
+
 
 import json
 import os

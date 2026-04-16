@@ -2,7 +2,6 @@
 # YOUR BASE RESUME — Replace everything below with your own info
 # The agent will tailor this for each job automatically
 # ================================================================
-
 NAME: Your Full Name
 EMAIL: your.email@gmail.com
 PHONE: +91-XXXXXXXXXX
@@ -61,3 +60,4 @@ ACHIEVEMENTS:
 
 CERTIFICATIONS:
 - [Add your certifications here]
+

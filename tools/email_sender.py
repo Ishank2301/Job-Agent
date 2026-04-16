@@ -3,6 +3,7 @@ Cold Email Tool
 Writes personalized cold emails to recruiters using Ollama LLM,
 then sends them via Gmail SMTP.
 """
+
 import smtplib
 import json
 import os
@@ -20,7 +21,8 @@ from utils.logger import get_logger
 logger = get_logger(__name__)
 
 
-# ─── Email Writer ─────────────────────────────────────────────────────────────
+# Email Writer
+
 
 def write_cold_email(
     recruiter_name: Optional[str],
@@ -94,7 +96,9 @@ EMAIL BODY:
     return {"subject": subject.strip(), "body": body.strip()}
 
 
-def _fallback_email(recruiter_name: Optional[str], company: str, job_title: str) -> dict:
+def _fallback_email(
+    recruiter_name: Optional[str], company: str, job_title: str
+) -> dict:
     """Fallback email if LLM fails."""
     greeting = f"Hi {recruiter_name.split()[0]}," if recruiter_name else "Hi,"
     return {
@@ -113,17 +117,15 @@ Thank you so much for your time!
 
 Best regards,
 [Your Name]
-[LinkedIn] | [GitHub] | [Email]"""
+[LinkedIn] | [GitHub] | [Email]""",
     }
 
 
-# ─── Email Sender ─────────────────────────────────────────────────────────────
+# Email Sender
+
 
 def send_email(
-    to_email: str,
-    subject: str,
-    body: str,
-    resume_path: Optional[str] = None
+    to_email: str, subject: str, body: str, resume_path: Optional[str] = None
 ) -> bool:
     """
     Send email via Gmail SMTP.
@@ -173,7 +175,8 @@ def send_email(
         return False
 
 
-# ─── Application Logger ───────────────────────────────────────────────────────
+# Application Logger
+
 
 def log_application(
     job_id: str,
@@ -182,7 +185,7 @@ def log_application(
     recruiter_email: Optional[str],
     email_subject: str,
     status: str,
-    resume_path: str
+    resume_path: str,
 ):
     """Log every application attempt to JSON file."""
     os.makedirs("data/applications", exist_ok=True)
@@ -193,16 +196,18 @@ def log_application(
         except (FileNotFoundError, json.JSONDecodeError):
             apps = []
 
-        apps.append({
-            "job_id": job_id,
-            "company": company,
-            "job_title": job_title,
-            "recruiter_email": recruiter_email,
-            "email_subject": email_subject,
-            "status": status,   # sent | dry_run | failed | skipped
-            "resume_path": resume_path,
-            "applied_at": datetime.now().isoformat(),
-        })
+        apps.append(
+            {
+                "job_id": job_id,
+                "company": company,
+                "job_title": job_title,
+                "recruiter_email": recruiter_email,
+                "email_subject": email_subject,
+                "status": status,  # sent | dry_run | failed | skipped
+                "resume_path": resume_path,
+                "applied_at": datetime.now().isoformat(),
+            }
+        )
 
         with open(settings.APPLICATIONS_LOG, "w") as f:
             json.dump(apps, f, indent=2)
@@ -231,7 +236,8 @@ def emails_sent_today() -> int:
     apps = load_applications()
     today = datetime.now().strftime("%Y-%m-%d")
     return sum(
-        1 for a in apps
+        1
+        for a in apps
         if a.get("status") in ("sent", "dry_run")
         and a.get("applied_at", "").startswith(today)
     )

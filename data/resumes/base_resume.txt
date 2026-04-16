@@ -2,12 +2,12 @@
 # YOUR BASE RESUME — Replace everything below with your own info
 # The agent will tailor this for each job automatically
 # ================================================================
-NAME: Your Full Name
-EMAIL: your.email@gmail.com
-PHONE: +91-XXXXXXXXXX
-LINKEDIN: linkedin.com/in/yourprofile
-GITHUB: github.com/yourusername
-LOCATION: Your City, India
+NAME: Ishank Mishra
+EMAIL: ishankmishra579@gmail.com
+PHONE: +91-9799292263
+LINKEDIN: linkedin.com/in/ishank2301
+GITHUB: github.com/ishank2301
+LOCATION: Rajasthan, India
 
 OBJECTIVE:
 Passionate 3rd-year Computer Science student specializing in Machine Learning and AI,
@@ -15,9 +15,9 @@ seeking internship/full-time opportunities to apply my skills in building intell
 
 EDUCATION:
 B.Tech Computer Science Engineering
-[Your University Name], [City]
-Expected Graduation: 2026
-CGPA: X.X / 10
+Shankara Institute of Technology, Jaipur
+Expected Graduation: 2027
+CGPA: 8.9 / 10
 
 TECHNICAL SKILLS:
 Languages:     Python, JavaScript, C++
@@ -30,12 +30,11 @@ Tools:         Git, Linux, VS Code, Jupyter
 
 EXPERIENCE:
 
-Open Source Contributor | Aeon (Time Series Library) | 2024
+Open Source Contributor | Aeon (Time Series Library) | 2025
 - Contributed time series classification and clustering improvements
 - Submitted and merged pull requests improving model pipeline performance
 - Collaborated with international maintainers via GitHub code reviews
 
-[Add your own experience here]
 
 PROJECTS:
 
@@ -45,19 +44,19 @@ Tech: LangGraph, LangChain, FAISS, MLflow, Streamlit
 - Implemented automated CI/CD pipeline with GitHub Actions, Docker, security scans
 - Integrated MLflow for experiment tracking across all LLM interactions
 
-Job Application Agent (2025)
+Job Application Agent (2026)
 Tech: LangGraph, BeautifulSoup, Ollama, Gmail API
 - Fully automated job hunting agent scraping LinkedIn, Naukri, Internshala
 - LLM-powered resume tailoring and personalized cold email generation
 
-[Add your own projects here]
 
 ACHIEVEMENTS:
 - Google Summer of Code 2026 Applicant (ML4Sci organization)
-- Contributor to [X] open source repositories
-- [Hackathon name] — [position] (Year)
-- [Any awards, certifications, competitive coding achievements]
+- Contributor to Aeon open source repositories
+- Participated in SIT Hackathon and got into Top-5 (2026)
+- 
 
 CERTIFICATIONS:
-- [Add your certifications here]
-
+- Completed the Hands On ML course on Udemy : Earned Badjes for completing every Project and Assignment in the COurse also created my first ML pipeline by grace of this course
+  I also got to know about DL concepts like ANN(Artificial Neural Network), CNN(Convolutional Neural Network), RNN(Recurrent Neural Network) and about NLP techniques like LSTM, 
+  GRU, Encoder-Decoder and Transformers

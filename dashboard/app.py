@@ -1,4 +1,7 @@
-
+"""
+Job Agent — Monitoring Dashboard
+Real-time view of applications, job matches, and agent status.
+"""
 
 import json
 import os
@@ -7,7 +10,8 @@ import pandas as pd
 from datetime import datetime
 
 st.set_page_config(page_title="Job Agent Dashboard", page_icon="🤖", layout="wide")
-# Change the padding from the given reference link
+
+# Markdown Refrence should be explicit
 st.markdown(
     """
 <style>
@@ -39,7 +43,7 @@ def load_jobs():
         return []
 
 
-# ── Header ────────────────────────────────────────────────────────────────────
+#  Header
 st.markdown("# 🤖 Job Application Agent")
 st.markdown("*Fully automated job hunting — sit back and relax*")
 st.divider()
@@ -81,7 +85,7 @@ with st.sidebar:
 apps = load_applications()
 jobs = load_jobs()
 
-# ── Stats Row ──────────────────────────────────────────────────────────────────
+#  Stats Row
 col1, col2, col3, col4 = st.columns(4)
 today = datetime.now().strftime("%Y-%m-%d")
 today_apps = [a for a in apps if a.get("applied_at", "").startswith(today)]
@@ -99,7 +103,7 @@ with col4:
 
 st.divider()
 
-# ── Applications Table ─────────────────────────────────────────────────────────
+#  Applications Table
 col_left, col_right = st.columns([2, 1])
 
 with col_left:
@@ -153,7 +157,7 @@ with col_right:
 
 st.divider()
 
-# ── Jobs in DB ────────────────────────────────────────────────────────────────
+# Jobs in DB
 st.markdown("### 🔍 Jobs Database")
 if jobs:
     df_jobs = pd.DataFrame(jobs)

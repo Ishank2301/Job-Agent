@@ -9,6 +9,7 @@ Nodes:
   6. send_application  — send email + log result
   7. report            — generate daily summary
 """
+
 from typing import Annotated, TypedDict, List, Dict, Optional
 from langgraph.graph import StateGraph, END
 from langgraph.graph.message import add_messages
@@ -18,8 +19,12 @@ from tools.scraper import scrape_all_jobs, save_jobs, load_jobs, JobListing
 from tools.resume_tailor import tailor_resume, score_job_match
 from tools.recruiter_finder import find_recruiter
 from tools.email_sender import (
-    write_cold_email, send_email, log_application,
-    already_applied, emails_sent_today, load_applications
+    write_cold_email,
+    send_email,
+    log_application,
+    already_applied,
+    emails_sent_today,
+    load_applications,
 )
 from config.settings import settings
 from utils.logger import get_logger
@@ -27,7 +32,8 @@ from utils.logger import get_logger
 logger = get_logger(__name__)
 
 
-# ─── State ────────────────────────────────────────────────────────────────────
+# State
+
 
 class AgentState(TypedDict):
     jobs: List[Dict]
@@ -39,7 +45,8 @@ class AgentState(TypedDict):
     run_id: str
 
 
-# ─── Node 1: Scrape Jobs ──────────────────────────────────────────────────────
+#  Node 1: Scrape Jobs
+
 
 def scrape_jobs_node(state: AgentState) -> AgentState:
     """Scrape all job boards and save new listings."""
@@ -53,10 +60,11 @@ def scrape_jobs_node(state: AgentState) -> AgentState:
 
         # Only process jobs not yet applied to
         unprocessed = [
-            j for j in all_jobs
+            j
+            for j in all_jobs
             if not already_applied(j["id"])
-            and j.get("company", "").lower() not in
-            [b.lower() for b in settings.BLACKLIST_COMPANIES if b]
+            and j.get("company", "").lower()
+            not in [b.lower() for b in settings.BLACKLIST_COMPANIES if b]
         ]
 
         logger.info(f"Found {len(unprocessed)} unprocessed jobs")
@@ -66,7 +74,8 @@ def scrape_jobs_node(state: AgentState) -> AgentState:
         return {**state, "jobs": [], "errors": state["errors"] + [str(e)]}
 
 
-# ─── Node 2: Filter & Score Jobs ─────────────────────────────────────────────
+#  Node 2: Filter & Score Jobs
+
 
 def filter_jobs_node(state: AgentState) -> AgentState:
     """Score each job for match quality and filter top candidates."""
@@ -81,7 +90,7 @@ def filter_jobs_node(state: AgentState) -> AgentState:
 
     # Sort by score, take top N
     scored.sort(key=lambda x: x["match_score"], reverse=True)
-    top_jobs = scored[:settings.MAX_JOBS_PER_RUN]
+    top_jobs = scored[: settings.MAX_JOBS_PER_RUN]
 
     # Filter out low-quality matches
     filtered = [j for j in top_jobs if j["match_score"] >= 0.3]
@@ -90,7 +99,8 @@ def filter_jobs_node(state: AgentState) -> AgentState:
     return {**state, "filtered_jobs": filtered}
 
 
-# ─── Node 3–6: Process Each Job ───────────────────────────────────────────────
+# Node 3–6: Process Each Job
+
 
 def process_jobs_node(state: AgentState) -> AgentState:
     """
@@ -101,7 +111,9 @@ def process_jobs_node(state: AgentState) -> AgentState:
     4. Send email
     5. Log result
     """
-    logger.info("NODE 3-6: Processing each job (find recruiter → tailor → email → send)...")
+    logger.info(
+        "NODE 3-6: Processing each job (find recruiter → tailor → email → send)..."
+    )
 
     processed = []
     daily_limit = settings.MAX_EMAILS_PER_DAY
@@ -114,7 +126,9 @@ def process_jobs_node(state: AgentState) -> AgentState:
         jd = job.get("description", "")
         apply_url = job.get("apply_url", "")
 
-        logger.info(f"\nProcessing: {title} at {company} (score: {job.get('match_score', 0):.2f})")
+        logger.info(
+            f"\nProcessing: {title} at {company} (score: {job.get('match_score', 0):.2f})"
+        )
 
         # Check daily email limit
         if sent_today >= daily_limit:
@@ -137,7 +151,9 @@ def process_jobs_node(state: AgentState) -> AgentState:
 
             # Step 2: Tailor resume
             tailored_resume = tailor_resume(title, company, jd)
-            resume_path = f"data/resumes/tailored/{company}_{title}.txt".replace(" ", "_")
+            resume_path = f"data/resumes/tailored/{company}_{title}.txt".replace(
+                " ", "_"
+            )
 
             # Step 3: Write cold email
             email_data = write_cold_email(
@@ -145,7 +161,7 @@ def process_jobs_node(state: AgentState) -> AgentState:
                 company=company,
                 job_title=title,
                 job_description=jd,
-                tailored_resume=tailored_resume
+                tailored_resume=tailored_resume,
             )
 
             # Step 4: Send email
@@ -153,10 +169,14 @@ def process_jobs_node(state: AgentState) -> AgentState:
                 to_email=recruiter_email,
                 subject=email_data["subject"],
                 body=email_data["body"],
-                resume_path=resume_path if not settings.DRY_RUN else None
+                resume_path=resume_path if not settings.DRY_RUN else None,
             )
 
-            status = "sent" if (success and not settings.DRY_RUN) else "dry_run" if settings.DRY_RUN else "failed"
+            status = (
+                "sent"
+                if (success and not settings.DRY_RUN)
+                else "dry_run" if settings.DRY_RUN else "failed"
+            )
 
             # Step 5: Log application
             log_application(
@@ -166,22 +186,28 @@ def process_jobs_node(state: AgentState) -> AgentState:
                 recruiter_email=recruiter_email,
                 email_subject=email_data["subject"],
                 status=status,
-                resume_path=resume_path
+                resume_path=resume_path,
             )
 
             job["processing_status"] = status
             job["email_subject"] = email_data["subject"]
             sent_today += 1
-            logger.info(f"Application {status}: {title} at {company} → {recruiter_email}")
+            logger.info(
+                f"Application {status}: {title} at {company} → {recruiter_email}"
+            )
 
         except Exception as e:
             logger.error(f"Error processing {title} at {company}: {e}")
             job["processing_status"] = "error"
             job["error"] = str(e)
             log_application(
-                job_id=job_id, company=company, job_title=title,
-                recruiter_email=None, email_subject="",
-                status="failed", resume_path=""
+                job_id=job_id,
+                company=company,
+                job_title=title,
+                recruiter_email=None,
+                email_subject="",
+                status="failed",
+                resume_path="",
             )
 
         processed.append(job)
@@ -189,17 +215,20 @@ def process_jobs_node(state: AgentState) -> AgentState:
     return {**state, "processed_jobs": processed}
 
 
-# ─── Node 7: Report ───────────────────────────────────────────────────────────
-
+# Node 7: Report
 def report_node(state: AgentState) -> AgentState:
     """Generate and print a summary of today's run."""
     logger.info("\nNODE 7: Generating run summary...")
 
     processed = state["processed_jobs"]
     total = len(processed)
-    sent = sum(1 for j in processed if j.get("processing_status") in ("sent", "dry_run"))
+    sent = sum(
+        1 for j in processed if j.get("processing_status") in ("sent", "dry_run")
+    )
     skipped = sum(1 for j in processed if "skip" in j.get("processing_status", ""))
-    failed = sum(1 for j in processed if j.get("processing_status") in ("failed", "error"))
+    failed = sum(
+        1 for j in processed if j.get("processing_status") in ("failed", "error")
+    )
 
     all_apps = load_applications()
 
@@ -220,7 +249,7 @@ def report_node(state: AgentState) -> AgentState:
                 "recruiter_email": j.get("recruiter_email"),
             }
             for j in processed
-        ]
+        ],
     }
 
     logger.info("\n" + "=" * 50)
@@ -238,7 +267,8 @@ def report_node(state: AgentState) -> AgentState:
     return {**state, "summary": summary}
 
 
-# ─── Graph Builder ────────────────────────────────────────────────────────────
+#  Graph Builder
+
 
 def build_agent() -> any:
     """Build and compile the LangGraph job agent."""

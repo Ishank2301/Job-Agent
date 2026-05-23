@@ -1,7 +1,3 @@
-"""
-Job Agent — Monitoring Dashboard
-Real-time view of applications, job matches, and agent status.
-"""
 
 import json
 import os
@@ -100,7 +96,7 @@ with st.sidebar:
     if st.button("🔄 Refresh Data", width="stretch"):
         st.rerun()
 
-# Load data
+
 apps = load_applications()
 jobs = load_jobs()
 

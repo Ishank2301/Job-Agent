@@ -164,8 +164,8 @@ Shows:
 ---
 
 ## Results:
-![Job Results](image.png)
+![Job Results](D:\Ai ml\Projects_ALL\Job-Agent\results\image.png)
 
-![Dashboard](image-1.png)
+![Dashboard](D:\Ai ml\Projects_ALL\Job-Agent\results\image.png)
 ## 📜 License
 MIT

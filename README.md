@@ -2,25 +2,19 @@
 
 > An autonomous AI-powered job hunting system that discovers jobs, tailors resumes, finds recruiter contacts, generates personalized outreach emails, and automates applications — all with minimal human intervention.
 
----
+
 
 # 📸 Results
 
 ## Job Discovery Results
 
-```md id="sq17g6"
-![Job Results](results/image.png)
-```
+![Job Result](results/image.png)
 
----
 
 ## Dashboard Preview
 
-```md id="65s6it"
 ![Dashboard](results/dashboard.png)
-```
 
----
 
 # ✨ Overview
 

@@ -1,62 +1,123 @@
-# ================================================================
-# YOUR BASE RESUME — Replace everything below with your own info
-# The agent will tailor this for each job automatically
-# ================================================================
-NAME: Ishank Mishra
-EMAIL: ishankmishra579@gmail.com
-PHONE: +91-9799292263
-LINKEDIN: linkedin.com/in/ishank2301
-GITHUB: github.com/ishank2301
-LOCATION: Rajasthan, India
+================================================================================
+                              ISHANK MISHRA
+================================================================================
+  Jaipur, India  |  ishumishra2905@gmail.com  |  linkedin.com/in/ishank2301
+  github.com/Ishank2301  |  ishankportfolio.netlify.app  |  kaggle.com/ishank2005
+================================================================================
 
-OBJECTIVE:
-Passionate 3rd-year Computer Science student specializing in Machine Learning and AI,
-seeking internship/full-time opportunities to apply my skills in building intelligent systems.
 
-EDUCATION:
-B.Tech Computer Science Engineering
+PROFESSIONAL SUMMARY
+--------------------------------------------------------------------------------
+AI/ML Engineer and Full Stack Developer specializing in LLM orchestration,
+multi-agent systems, and end-to-end AI application development. Hands-on
+experience building production-grade RAG pipelines, fine-tuned LLMs, and
+AI-powered web applications using FastAPI, React, and modern Python stacks.
+Passionate about agentic AI, backend architecture, and deploying scalable
+intelligent systems that solve real-world problems.
+
+
+TECHNICAL SKILLS
+--------------------------------------------------------------------------------
+Languages      :  Python, SQL, TypeScript, JavaScript
+
+AI / LLM       :  LangChain, LangGraph, CrewAI, AutoGen, OpenAI APIs, Ollama,
+                  RAG, QLoRA Fine-Tuning, PEFT, Prompt Engineering
+
+ML / DL        :  TensorFlow, PyTorch, Scikit-learn, Keras, OpenCV
+                  CNNs, RNNs, Transformers, Transfer Learning, Multi-Agent Systems
+
+Full Stack     :  FastAPI, React, Next.js, Tailwind CSS, SQLAlchemy, REST APIs,
+                  Streamlit
+
+Databases      :  PostgreSQL, SQLite, FAISS, ChromaDB, Pinecone
+
+DevOps / Tools :  Docker, Git, GitHub, AWS (EC2, S3, Lambda), VS Code, Jupyter
+
+
+PROJECTS
+--------------------------------------------------------------------------------
+
+MediAgent v5.0 — AI Medical Copilot
+Stack : Python · FastAPI · LangGraph · CrewAI · OpenAI APIs · React · PostgreSQL · Docker
+Link  : github.com/Ishank2301/MediAgent
+
+  • Architected a multi-agent AI system for clinical decision support,
+    orchestrating specialist agents (diagnosis, drug interaction, radiology
+    triage) via LangGraph state machines and CrewAI task delegation.
+  • Built a FastAPI backend with SQLAlchemy ORM, JWT auth, and async REST
+    endpoints; integrated OpenAI GPT-4o for medical NLP and RAG-based
+    retrieval over clinical knowledge bases.
+  • Developed React + Tailwind frontend with real-time AI response streaming
+    and a conversation memory layer for persistent patient context.
+
+--------------------------------------------------------------------------------
+
+AI Reviewer Agent Platform
+Stack : Python · LangChain · AutoGen · FastAPI · Next.js · Tailwind CSS · SQLite · GitHub API
+Link  : github.com/Ishank2301/DeepReview-AI
+
+  • Built an autonomous multi-agent code review system using AutoGen and
+    LangChain to analyze PRs, flag anti-patterns, suggest refactors, and
+    generate structured review reports via GitHub API integration.
+  • Designed a FastAPI orchestration layer routing tasks across specialized
+    sub-agents (security, performance, style); deployed with Docker and served
+    via a Next.js dashboard for live review tracking.
+
+--------------------------------------------------------------------------------
+
+RAG Document Intelligence Pipeline
+Stack : Python · LangChain · FAISS · OpenAI API · FastAPI · Streamlit
+Link  : github.com/Ishank2301/chat-with-pdf-rag
+
+  • Engineered an end-to-end RAG system for multi-document QA: implemented
+    semantic chunking, hybrid vector + BM25 retrieval with FAISS, and a
+    re-ranking layer — achieving 85%+ answer accuracy.
+  • Exposed the pipeline via FastAPI with streaming responses and an interactive
+    Streamlit interface supporting real-time document ingestion and NL querying.
+
+--------------------------------------------------------------------------------
+
+LLM Fine-Tuning — QLoRA on LLaMA 2
+Stack : PyTorch · Hugging Face Transformers · PEFT · LoRA · WandB
+Link  : github.com/Ishank2301/LLM-Fine-Tuning-QLoRA-on-LLaMA-2
+
+  • Fine-tuned LLaMA 2 (7B) for domain-specific generation using QLoRA:
+    achieved 40% faster training and 60% GPU memory reduction via 4-bit
+    quantization and low-rank adaptation (PEFT).
+  • Implemented custom training loops with mixed-precision and gradient
+    accumulation; evaluated outputs using BLEU/ROUGE metrics.
+
+--------------------------------------------------------------------------------
+
+Computer Vision Classification System
+Stack : TensorFlow · OpenCV · ResNet50 · EfficientNet · TensorFlow Lite
+Link  : github.com/Ishank2301/DBZ-Fighter
+
+  • Built an image classification pipeline with ResNet50 + EfficientNet transfer
+    learning on 50K+ images, achieving 92% validation accuracy through targeted
+    augmentation and preprocessing strategies.
+  • Optimized model for edge deployment via TFLite quantization, reducing
+    inference latency by 35%; added real-time webcam object detection with OpenCV.
+
+
+EDUCATION
+--------------------------------------------------------------------------------
+Bachelor of Technology — Computer Software Engineering     Aug 2023 – Jul 2027
 Shankara Institute of Technology, Jaipur
-Expected Graduation: 2027
-CGPA: 8.9 / 10
-
-TECHNICAL SKILLS:
-Languages:     Python, JavaScript, C++
-ML/AI:         PyTorch, TensorFlow, scikit-learn, LangChain, LangGraph, Hugging Face
-Data Science:  Pandas, NumPy, Matplotlib, SQL, FAISS
-NLP:           Transformers, BERT, RAG, embeddings
-MLOps:         MLflow, Docker, GitHub Actions, CI/CD
-Web:           FastAPI, Streamlit, Flask
-Tools:         Git, Linux, VS Code, Jupyter
-
-EXPERIENCE:
-
-Open Source Contributor | Aeon (Time Series Library) | 2025
-- Contributed time series classification and clustering improvements
-- Submitted and merged pull requests improving model pipeline performance
-- Collaborated with international maintainers via GitHub code reviews
+Relevant: Machine Learning, Deep Learning, Data Structures, Algorithms, DBMS
 
 
-PROJECTS:
+ACHIEVEMENTS & ACTIVITIES
+--------------------------------------------------------------------------------
+  • Top 10 finish (out of 50+ teams) at a national-level hackathon for building
+    MediAgent v5.0 — AI Medical Copilot.
+  • Active member of the Competitive Programming Club; regularly participate in
+    online coding contests and ML competitions.
+  • Open-source contributor on GitHub (github.com/Ishank2301) focused on LLM
+    applications, RAG systems, and agentic AI workflows.
+  • Completed Deloitte Australia Data Analytics Job Simulation (2024) —
+    delivered EDA, feature engineering, and business insight reports.
+  • Independently implement recent AI research papers; stay current with
+    state-of-the-art agentic AI and LLM optimization architectures.
 
-MediBot — AI Medical Chatbot (2024)
-Tech: LangGraph, LangChain, FAISS, MLflow, Streamlit
-- Built a production-grade RAG chatbot with 4-node LangGraph conversation flow
-- Implemented automated CI/CD pipeline with GitHub Actions, Docker, security scans
-- Integrated MLflow for experiment tracking across all LLM interactions
-
-Job Application Agent (2026)
-Tech: LangGraph, BeautifulSoup, Ollama, Gmail API
-- Fully automated job hunting agent scraping LinkedIn, Naukri, Internshala
-- LLM-powered resume tailoring and personalized cold email generation
-
-
-ACHIEVEMENTS:
-- Google Summer of Code 2026 Applicant (ML4Sci organization)
-- Contributor to Aeon open source repositories
-- Participated in SIT Hackathon and got into Top-5 (2026)
-- 
-
-CERTIFICATIONS:
-- Completed the Hands On ML course on Udemy : Earned Badjes for completing every Project and Assignment in the COurse also created my first ML pipeline by grace of this course
-  I also got to know about DL concepts like ANN(Artificial Neural Network), CNN(Convolutional Neural Network), RNN(Recurrent Neural Network) and about NLP techniques like LSTM, 
-  GRU, Encoder-Decoder and Transformers
+================================================================================

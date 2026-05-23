@@ -6,9 +6,46 @@ Run modes:
   python main.py --dry    — dry run (no emails sent)
   python main.py --dashboard — launch Streamlit dashboard
 """
+import os
+import subprocess
 import sys
 import argparse
 from datetime import datetime
+
+
+def _restart_inside_local_venv():
+    """Prefer the repo venv when users run `python main.py` directly."""
+    if os.getenv("JOB_AGENT_SKIP_VENV") == "1":
+        return
+
+    project_root = os.path.dirname(os.path.abspath(__file__))
+    invoked_script = os.path.abspath(sys.argv[0]) if sys.argv and sys.argv[0] else ""
+    if os.path.normcase(invoked_script) != os.path.normcase(__file__):
+        return
+
+    if os.name == "nt":
+        venv_python = os.path.join(project_root, "venv", "Scripts", "python.exe")
+    else:
+        venv_python = os.path.join(project_root, "venv", "bin", "python")
+
+    if not os.path.exists(venv_python):
+        return
+
+    current_python = os.path.abspath(sys.executable)
+    target_python = os.path.abspath(venv_python)
+    if os.path.normcase(current_python) == os.path.normcase(target_python):
+        return
+
+    env = os.environ.copy()
+    env["JOB_AGENT_SKIP_VENV"] = "1"
+    try:
+        raise SystemExit(subprocess.call([target_python, *sys.argv], env=env))
+    except KeyboardInterrupt:
+        raise SystemExit(130)
+
+
+_restart_inside_local_venv()
+
 from utils.logger import get_logger
 from config.settings import settings
 
@@ -56,8 +93,13 @@ def run_daemon():
 
 def launch_dashboard():
     """Launch the Streamlit monitoring dashboard."""
-    import subprocess
-    subprocess.run(["streamlit", "run", "dashboard/app.py"])
+    dashboard_path = os.path.join(
+        os.path.dirname(os.path.abspath(__file__)), "dashboard", "app.py"
+    )
+    try:
+        subprocess.run([sys.executable, "-m", "streamlit", "run", dashboard_path])
+    except KeyboardInterrupt:
+        logger.info("Dashboard stopped.")
 
 
 if __name__ == "__main__":

@@ -5,9 +5,31 @@ Real-time view of applications, job matches, and agent status.
 
 import json
 import os
+import sys
+import importlib.util
 import streamlit as st
 import pandas as pd
 from datetime import datetime
+
+PROJECT_ROOT = os.path.dirname(os.path.dirname(os.path.abspath(__file__)))
+if PROJECT_ROOT not in sys.path:
+    sys.path.insert(0, PROJECT_ROOT)
+
+
+def load_settings():
+    try:
+        from config.settings import settings
+
+        return settings
+    except ModuleNotFoundError:
+        settings_path = os.path.join(PROJECT_ROOT, "config", "settings.py")
+        spec = importlib.util.spec_from_file_location("job_agent_settings", settings_path)
+        module = importlib.util.module_from_spec(spec)
+        spec.loader.exec_module(module)
+        return module.settings
+
+
+settings = load_settings()
 
 st.set_page_config(page_title="Job Agent Dashboard", page_icon="🤖", layout="wide")
 
@@ -29,7 +51,8 @@ st.markdown(
 
 def load_applications():
     try:
-        with open("data/applications/applications.json") as f:
+        path = os.path.join(PROJECT_ROOT, "data", "applications", "applications.json")
+        with open(path) as f:
             return json.load(f)
     except Exception:
         return []
@@ -37,7 +60,8 @@ def load_applications():
 
 def load_jobs():
     try:
-        with open("data/jobs/jobs.json") as f:
+        path = os.path.join(PROJECT_ROOT, "data", "jobs", "jobs.json")
+        with open(path) as f:
             return json.load(f)
     except Exception:
         return []
@@ -51,12 +75,9 @@ st.divider()
 # Sidebar controls
 with st.sidebar:
     st.markdown("## ⚙️ Controls")
-    if st.button("▶️ Run Agent Now", use_container_width=True, type="primary"):
+    if st.button("▶️ Run Agent Now", width="stretch", type="primary"):
         with st.spinner("Running agent..."):
             try:
-                import sys
-
-                sys.path.insert(0, os.path.dirname(os.path.dirname(__file__)))
                 from graph.job_agent import run_agent
 
                 summary = run_agent()
@@ -68,8 +89,6 @@ with st.sidebar:
 
     st.divider()
     st.markdown("### 🔧 Settings")
-    from config.settings import settings
-
     st.info(f"**Mode:** {'🧪 Dry Run' if settings.DRY_RUN else '🚀 Live'}")
     st.info(f"**LLM:** {settings.OLLAMA_MODEL}")
     st.info(f"**Daily limit:** {settings.MAX_EMAILS_PER_DAY} emails")
@@ -78,7 +97,7 @@ with st.sidebar:
         st.markdown(f"- {t}")
 
     st.divider()
-    if st.button("🔄 Refresh Data", use_container_width=True):
+    if st.button("🔄 Refresh Data", width="stretch"):
         st.rerun()
 
 # Load data
@@ -127,11 +146,13 @@ with col_left:
             }
             return colors.get(val, "")
 
-        st.dataframe(
-            df.style.applymap(color_status, subset=["Status"]),
-            use_container_width=True,
-            height=400,
-        )
+        styler = df.style
+        if hasattr(styler, "map"):
+            styler = styler.map(color_status, subset=["Status"])
+        else:
+            styler = styler.applymap(color_status, subset=["Status"])
+
+        st.dataframe(styler, width="stretch", height=400)
     else:
         st.info("No applications yet. Run the agent to start!")
 
@@ -165,7 +186,7 @@ if jobs:
     cols = [c for c in cols if c in df_jobs.columns]
     df_jobs = df_jobs[cols].head(50)
     df_jobs.columns = [c.title().replace("_", " ") for c in cols]
-    st.dataframe(df_jobs, use_container_width=True, height=300)
+    st.dataframe(df_jobs, width="stretch", height=300)
 else:
     st.info("No jobs scraped yet.")
 

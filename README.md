@@ -163,5 +163,9 @@ Shows:
 
 ---
 
+## Results:
+![Job Results](image.png)
+
+![Dashboard](image-1.png)
 ## 📜 License
 MIT

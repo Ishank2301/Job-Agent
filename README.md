@@ -1,171 +1,468 @@
 # 🤖 Job Application Agent
 
-> A fully automated job hunting agent that scrapes jobs, tailors your resume, finds recruiter contacts, and sends personalized cold emails — **you do nothing**.
+> An autonomous AI-powered job hunting system that discovers jobs, tailors resumes, finds recruiter contacts, generates personalized outreach emails, and automates applications — all with minimal human intervention.
 
+---
 
+# 📸 Results
 
-## 🧠 How It Works
+## Job Discovery Results
 
-```
-Every day at 9 AM (automated):
-    ↓
-1. Scrape LinkedIn + Naukri + Internshala for new jobs
-    ↓
-2. Score each job for match quality (keyword overlap)
-    ↓
-3. Find recruiter name + email for each company
-    ↓
-4. Tailor your resume to the specific JD (Ollama LLM)
-    ↓
-5. Write a personalized cold email / referral request (Ollama LLM)
-    ↓
-6. Send via Gmail + log everything
-    ↓
-7. Dashboard shows all activity
+```md id="sq17g6"
+![Job Results](results/image.png)
 ```
 
 ---
 
-## ⚡ Quick Start
+## Dashboard Preview
 
-### 1. Install
-```bash
+```md id="65s6it"
+![Dashboard](results/dashboard.png)
+```
+
+---
+
+# ✨ Overview
+
+The **Job Application Agent** is an end-to-end AI automation system designed to streamline and scale the job application process.
+
+Instead of manually searching job boards, editing resumes, writing cold emails, and tracking applications, the agent automates the entire workflow using:
+
+* Local LLMs via [Ollama](https://ollama.com?utm_source=chatgpt.com)
+* Workflow orchestration with [LangGraph](https://www.langchain.com/langgraph?utm_source=chatgpt.com)
+* AI pipelines powered by [LangChain](https://www.langchain.com?utm_source=chatgpt.com)
+* Dashboard monitoring using [Streamlit](https://streamlit.io?utm_source=chatgpt.com)
+
+---
+
+# 🧠 System Workflow
+
+```text id="2c4tr9"
+Every day at 9 AM (automated)
+            ↓
+1. Scrape LinkedIn + Naukri + Internshala
+            ↓
+2. Score jobs using semantic matching
+            ↓
+3. Find recruiter names + emails
+            ↓
+4. Tailor resume to each job description
+            ↓
+5. Generate personalized cold emails
+            ↓
+6. Send applications via Gmail
+            ↓
+7. Log everything into dashboard/database
+```
+
+---
+
+# 🚀 Features
+
+## 🔍 Automated Job Discovery
+
+* Scrapes:
+
+  * LinkedIn
+  * Naukri
+  * Internshala
+* Filters jobs based on:
+
+  * role
+  * skills
+  * location
+  * experience level
+
+---
+
+## 🧠 AI Resume Tailoring
+
+Uses local LLMs through Ollama to:
+
+* optimize resumes for ATS systems
+* tailor experience to job descriptions
+* improve keyword alignment
+* dynamically generate role-specific resumes
+
+---
+
+## 📧 Personalized Cold Email Generation
+
+Automatically writes:
+
+* recruiter outreach emails
+* referral requests
+* application follow-ups
+
+Each email is customized using:
+
+* company context
+* job description
+* recruiter information
+* user portfolio/resume
+
+---
+
+## 🕵️ Recruiter Discovery
+
+Finds recruiter:
+
+* names
+* emails
+* hiring contacts
+
+using:
+
+* web scraping
+* company enrichment
+* search heuristics
+
+---
+
+## 📊 Monitoring Dashboard
+
+Built with Streamlit.
+
+Tracks:
+
+* applications sent
+* failed attempts
+* recruiter responses
+* match scores
+* daily activity
+* logs and analytics
+
+---
+
+# 🏗️ Architecture
+
+## High-Level Pipeline
+
+```text id="m0z0bx"
+Job Boards
+    ↓
+Scraper Engine
+    ↓
+Job Database
+    ↓
+Matching + Ranking Engine
+    ↓
+Resume Tailoring Agent
+    ↓
+Cold Email Generator
+    ↓
+Email Dispatcher
+    ↓
+Dashboard + Logs
+```
+
+---
+
+# ⚡ Quick Start
+
+# 1️⃣ Clone Repository
+
+```bash id="0u9u1k"
 git clone https://github.com/your-username/job-agent.git
+
 cd job-agent
-python -m venv venv && source venv/activate
+```
+
+---
+
+# 2️⃣ Create Virtual Environment
+
+## Windows
+
+```bash id="x5cw31"
+python -m venv venv
+venv\\Scripts\\activate
+```
+
+## macOS/Linux
+
+```bash id="01dvgd"
+python3 -m venv venv
+source venv/bin/activate
+```
+
+---
+
+# 3️⃣ Install Dependencies
+
+```bash id="2fdrhq"
 pip install -r requirements.txt
 ```
 
-### 2. Set up Ollama (local LLM)
-```bash
-# Install Ollama: https://ollama.ai
+---
+
+# 4️⃣ Install Ollama
+
+Install Ollama from:
+
+[Ollama Official Website](https://ollama.com?utm_source=chatgpt.com)
+
+Then pull a model locally:
+
+```bash id="l6hn0o"
 ollama pull llama3
-ollama serve   # runs at localhost:11434
 ```
 
-### 3. Configure
-```bash
-cp .env.example .env
-# Edit .env with your details:
-# - Gmail address + App Password
-# - Your target job titles
-# - Your target locations
+Run the Ollama server:
+
+```bash id="jcx73v"
+ollama serve
 ```
 
-### 4. Add your resume
-```
-Edit: data/resumes/base_resume.txt
-Replace the template with YOUR actual information.
-The agent tailors this for each job automatically.
+Default endpoint:
+
+```text id="vz80ih"
+http://localhost:11434
 ```
 
-### 5. Test first (dry run — no emails sent)
-```bash
+---
+
+# 5️⃣ Configure Environment Variables
+
+Create a `.env` file:
+
+```env id="f1jwd6"
+GMAIL_ADDRESS=your_email@gmail.com
+GMAIL_APP_PASSWORD=your_app_password
+
+JOB_TITLES=ML Engineer,Data Scientist
+JOB_LOCATIONS=Bangalore,Remote
+
+OLLAMA_HOST=http://localhost:11434
+
+DRY_RUN=true
+MAX_EMAILS_PER_DAY=10
+```
+
+---
+
+# 6️⃣ Add Your Resume
+
+Edit:
+
+```text id="0jzhcx"
+data/resumes/base_resume.txt
+```
+
+Replace the template with your real resume information.
+
+The AI agent automatically tailors this resume for each application.
+
+---
+
+# 7️⃣ Test the System (Safe Mode)
+
+```bash id="wx7s5m"
 python main.py --dry
 ```
 
-### 6. Go live
-```bash
+No real emails are sent.
+
+---
+
+# 8️⃣ Launch Production Mode
+
+```bash id="0x9sz9"
 python main.py --live
 ```
 
-### 7. Monitor
-```bash
+---
+
+# 9️⃣ Start Dashboard
+
+```bash id="3ikxjl"
 python main.py --dashboard
-# Opens at http://localhost:8501
 ```
 
-### 8. Automate (runs daily)
-```bash
+Dashboard runs at:
+
+```text id="fwk4gc"
+http://localhost:8501
+```
+
+---
+
+# 🔄 Automation Mode
+
+Run continuously:
+
+```bash id="u85t3d"
 python main.py --daemon
 ```
 
+The agent automatically executes daily workflows.
+
 ---
 
-## 📁 Project Structure
+# 📁 Project Structure
 
-```
+```text id="52k8gw"
 job-agent/
-├── main.py                      # Entry point (run / daemon / dashboard)
+│
+├── main.py
+│
 ├── graph/
-│   └── job_agent.py             # LangGraph 7-node orchestration
+│   └── job_agent.py
+│
 ├── tools/
-│   ├── scraper.py               # LinkedIn + Naukri + Internshala scraper
-│   ├── resume_tailor.py         # LLM resume tailoring + job scoring
-│   ├── recruiter_finder.py      # Recruiter email discovery
-│   └── email_sender.py          # Gmail sender + application logger
-├── config/
-│   └── settings.py              # All settings from .env
-├── utils/
-│   └── logger.py                # Structured logging
+│   ├── scraper.py
+│   ├── resume_tailor.py
+│   ├── recruiter_finder.py
+│   └── email_sender.py
+│
 ├── dashboard/
-│   └── app.py                   # Streamlit monitoring dashboard
+│   └── app.py
+│
+├── config/
+│   └── settings.py
+│
+├── utils/
+│   └── logger.py
+│
 ├── data/
 │   ├── resumes/
-│   │   ├── base_resume.txt      # YOUR RESUME — fill this in
-│   │   └── tailored/            # Auto-generated tailored resumes
-│   ├── jobs/jobs.json           # Jobs database
-│   └── applications/            # Applications log
+│   │   ├── base_resume.txt
+│   │   └── tailored/
+│   │
+│   ├── jobs/
+│   │   └── jobs.json
+│   │
+│   └── applications/
+│
 └── .github/workflows/
-    └── run_agent.yml            # GitHub Actions — runs daily automatically
+    └── run_agent.yml
 ```
 
 ---
 
-## ⚠️ IMPORTANT: Gmail App Password
 
-You need a **Gmail App Password**, not your regular password:
-1. Go to [myaccount.google.com/apppasswords](https://myaccount.google.com/apppasswords)
-2. Select "Mail" and generate a password
-3. Put it in `.env` as `GMAIL_APP_PASSWORD`
+# 🔐 Gmail App Password Setup
+
+For security reasons, Gmail requires an **App Password** instead of your normal password.
+
+Generate one here:
+
+[Google App Passwords](https://myaccount.google.com/apppasswords?utm_source=chatgpt.com)
+
+Steps:
+
+1. Enable 2FA on your Google account
+2. Create App Password
+3. Use generated password in `.env`
 
 ---
 
-## 🔐 GitHub Actions Setup (fully automated in cloud)
+# ☁️ GitHub Actions Automation
 
-Push your code to GitHub and add these secrets in **Settings → Secrets → Actions**:
+This project supports fully automated cloud execution using [GitHub Actions](https://github.com/features/actions?utm_source=chatgpt.com).
 
-| Secret | Value |
-|---|---|
-| `GMAIL_ADDRESS` | your Gmail address |
+Add these repository secrets:
+
+| Secret               | Description        |
+| -------------------- | ------------------ |
+| `GMAIL_ADDRESS`      | Gmail address      |
 | `GMAIL_APP_PASSWORD` | Gmail app password |
-| `OLLAMA_HOST` | Your Ollama server URL |
-| `JOB_TITLES` | ML Engineer,Data Scientist |
-| `JOB_LOCATIONS` | Bangalore,Remote |
+| `OLLAMA_HOST`        | Ollama server URL  |
+| `JOB_TITLES`         | Target job roles   |
+| `JOB_LOCATIONS`      | Target locations   |
 
-The agent runs **automatically every weekday at 9 AM IST** via GitHub Actions.
-
----
-
-## 🛡️ Safety Features
-
-- `DRY_RUN=true` by default — test before sending real emails
-- `MAX_EMAILS_PER_DAY=10` — never spam
-- Blacklist companies you don't want to apply to
-- All applications logged with timestamps
-- Already-applied jobs are never re-applied to
-- Failed recruiter searches are skipped gracefully
+The workflow automatically runs every weekday at 9 AM IST.
 
 ---
 
-## 📊 Dashboard
+# 🛡️ Safety Features
 
-```bash
-python main.py --dashboard
-```
-
-Shows:
-- Total applications sent
-- Status breakdown (sent / dry_run / failed / skipped)
-- Jobs database
-- Recruiter emails found
-- Daily activity
+* `DRY_RUN=true` by default
+* Maximum daily email limits
+* Duplicate application prevention
+* Structured logging
+* Graceful recruiter lookup failure handling
+* Company blacklisting support
 
 ---
 
-## Results:
-![Job Results](D:\Ai ml\Projects_ALL\Job-Agent\results\image.png)
+# 📊 Dashboard Analytics
 
-![Dashboard](D:\Ai ml\Projects_ALL\Job-Agent\results\image.png)
-## 📜 License
-MIT
+The Streamlit dashboard provides:
+
+* Total applications
+* Success/failure tracking
+* Recruiter email database
+* Daily outreach activity
+* Job match scores
+* Application logs
+* Resume generation history
+
+---
+
+# 🧠 AI Stack
+
+## LLM Runtime
+
+* [Ollama](https://ollama.com?utm_source=chatgpt.com)
+
+## Orchestration
+
+* [LangGraph](https://www.langchain.com/langgraph?utm_source=chatgpt.com)
+
+## AI Framework
+
+* [LangChain](https://www.langchain.com?utm_source=chatgpt.com)
+
+## Dashboard
+
+* [Streamlit](https://streamlit.io?utm_source=chatgpt.com)
+
+---
+
+# 📈 Future Improvements
+
+Potential upgrades:
+
+* Multi-agent architecture
+* AI interview preparation
+* Resume ATS scoring
+* LinkedIn auto-apply workflows
+* AI-generated cover letters
+* Recruiter sentiment analysis
+* Telegram/Discord notifications
+* Browser automation with Playwright
+* Voice-based AI assistant
+
+---
+
+# 📜 License
+
+MIT License
+
+---
+
+# ⚠️ Disclaimer
+
+This project is intended for educational and personal productivity purposes only.
+
+Users are responsible for complying with:
+
+* LinkedIn Terms of Service
+* Email outreach regulations
+* Anti-spam policies
+* Platform scraping limitations
+
+Use responsibly.
+
+---
+
+# 🙌 Acknowledgements
+
+Built using:
+
+* [Ollama](https://ollama.com?utm_source=chatgpt.com)
+* [LangChain](https://www.langchain.com?utm_source=chatgpt.com)
+* [LangGraph](https://www.langchain.com/langgraph?utm_source=chatgpt.com)
+* [Streamlit](https://streamlit.io?utm_source=chatgpt.com)
+* [GitHub Actions](https://github.com/features/actions?utm_source=chatgpt.com)

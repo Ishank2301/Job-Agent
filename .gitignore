@@ -1,0 +1,112 @@
+# =========================================
+# 1. Environment Variables & Secrets (Safety First)
+# =========================================
+# Never commit your API keys (OpenAI, Anthropic, Gemini) or database credentials.
+.env
+.env.local
+.env.*.local
+.env.development.local
+.env.test.local
+.env.production.local
+*.pem
+*.key
+
+# =========================================
+# 2. Next.js & Frontend (React, TS, Tailwind)
+# =========================================
+node_modules/
+.next/
+out/
+build/
+dist/
+
+# TypeScript cache
+*.tsbuildinfo
+next-env.d.ts
+
+# Package manager debug logs
+npm-debug.log*
+yarn-debug.log*
+yarn-error.log*
+pnpm-debug.log*
+.pnpm-store/
+
+# =========================================
+# 3. FastAPI & Python Backend (SQLAlchemy, Alembic)
+# =========================================
+__pycache__/
+*.py[cod]
+*$py.class
+*.so
+
+# Virtual Environments
+venv/
+.venv/
+env/
+.env_python/
+
+# Type checking / Linters
+.mypy_cache/
+.pytest_cache/
+.ruff_cache/
+coverage.xml
+htmlcov/
+.coverage
+
+# =========================================
+# 4. Database & Storage
+# =========================================
+# Ignore local SQLite DBs (if you fall back from PostgreSQL locally)
+*.sqlite3
+*.db
+
+# Postgres local data/dumps (if running via Docker with local mounts)
+pgdata/
+*.dump
+*.sql
+
+# =========================================
+# 5. Playwright Automation
+# =========================================
+test-results/
+playwright-report/
+blob-report/
+playwright/.cache/
+# Ignore browser traces, recorded videos, and screenshots generated during runs
+*.trace.zip
+*.webm
+*.png
+
+# =========================================
+# 6. AI Agent Artifacts & Output (Human-in-the-Loop)
+# =========================================
+# Do not commit downloaded local weights for Ollama or other local LLMs
+models/
+*.gguf
+*.bin
+*.safetensors
+
+# Ignore generated resumes, drafted emails, and scraped job descriptions
+exports/
+generated_resumes/
+generated_emails/
+scraped_jobs/
+logs/
+*.log
+
+# =========================================
+# 7. OS & IDE Specific
+# =========================================
+.DS_Store
+.DS_Store?
+._*
+.Spotlight-V100
+.Trashes
+ehthumbs.db
+Thumbs.db
+
+# VS Code / IntelliJ / Cursor
+.vscode/
+.idea/
+*.swp
+*.swo

@@ -1,0 +1,52 @@
+services:
+  db:
+    image: postgres:16-alpine
+    restart: unless-stopped
+    environment:
+      POSTGRES_USER: job_agent
+      POSTGRES_PASSWORD: job_agent
+      POSTGRES_DB: job_agent
+    volumes:
+      - postgres_data:/var/lib/postgresql/data
+    healthcheck:
+      test: ["CMD-SHELL", "pg_isready -U job_agent -d job_agent"]
+      interval: 5s
+      timeout: 5s
+      retries: 10
+
+  backend:
+    build:
+      context: ./backend
+      dockerfile: Dockerfile.backend
+    restart: unless-stopped
+    env_file:
+      - .env
+    environment:
+      DATABASE_URL: postgresql+asyncpg://job_agent:job_agent@db:5432/job_agent
+      AUTOFILL_API_BASE_URL: http://backend:8000
+      FRONTEND_URL: http://localhost:3000
+    ports:
+      - "8000:8000"
+    depends_on:
+      db:
+        condition: service_healthy
+    command: sh -c "alembic upgrade head && uvicorn app.main:app --host 0.0.0.0 --port 8000"
+
+  worker:
+    build:
+      context: ./backend
+      dockerfile: Dockerfile.worker
+    restart: unless-stopped
+    env_file:
+      - .env
+    environment:
+      DATABASE_URL: postgresql+asyncpg://job_agent:job_agent@db:5432/job_agent
+      AUTOFILL_API_BASE_URL: http://backend:8000
+      FRONTEND_URL: http://localhost:3000
+      AUTOFILL_HEADLESS: "false"
+    depends_on:
+      backend:
+        condition: service_started
+
+volumes:
+  postgres_data:

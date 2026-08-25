@@ -1,0 +1,3 @@
+-r requirements.backend.txt
+playwright>=1.44.0
+requests>=2.32.0

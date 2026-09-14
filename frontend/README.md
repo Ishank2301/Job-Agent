@@ -1,36 +1,58 @@
-This is a [Next.js](https://nextjs.org) project bootstrapped with [`create-next-app`](https://nextjs.org/docs/app/api-reference/cli/create-next-app).
+# Job·Agent — Frontend
 
-## Getting Started
+Next.js 16 (App Router) + React 19 + Tailwind CSS v4 console and marketing site for Job·Agent.
 
-First, run the development server:
+## Stack
+
+| Piece | Choice |
+| --- | --- |
+| Framework | Next.js 16, App Router, Turbopack |
+| Auth | Auth.js v5 (`next-auth` beta) — Google + GitHub OAuth |
+| Styling | Tailwind v4 + small custom design system in `app/globals.css` |
+| 3D | three.js / @react-three-fiber ambient network graph (client-only, dynamic import) |
+| UI kit | shadcn-style primitives in `components/ui` |
+
+## Routes
+
+**Marketing (static, SEO-complete):** `/` landing · `/about` · `/blog` + `/blog/[slug]` · `/contact` · `/privacy` · `/terms` · `/docs` · `/docs/api` · `/plans` · `/login`
+
+**Console (dynamic):** `/dashboard` · `/jobs` · `/applications` · `/resume-studio` · `/recruiters` · `/autofill-review` · `/settings`
+
+**Infra:** `/sitemap.xml` · `/robots.txt` · `/opengraph-image` · `/icon.svg` · `/api/auth/[...nextauth]` · `/api/newsletter`
+
+## Develop
 
 ```bash
-npm run dev
-# or
-yarn dev
-# or
-pnpm dev
-# or
-bun dev
+cp .env.example .env.local    # then add AUTH_SECRET + OAuth creds
+npm ci
+npm run dev                   # http://localhost:3000
 ```
 
-Open [http://localhost:3000](http://localhost:3000) with your browser to see the result.
+OAuth setup: **[../docs/AUTHENTICATION.md](../docs/AUTHENTICATION.md)** — until credentials are set, `/login` shows a setup hint and the console stays open (`AUTH_ENFORCED=false`).
 
-You can start editing the page by modifying `app/page.tsx`. The page auto-updates as you edit the file.
+## Build & lint
 
-This project uses [`next/font`](https://nextjs.org/docs/app/building-your-application/optimizing/fonts) to automatically optimize and load [Geist](https://vercel.com/font), a new font family for Vercel.
+```bash
+npm run lint    # eslint (0 errors expected; `any` warnings are tracked debt)
+npm run build   # production build — marketing pages prerender statically
+npm start
+```
 
-## Learn More
+## Where things live
 
-To learn more about Next.js, take a look at the following resources:
+```
+app/                  routes (page.tsx) + sitemap/robots/OG image/icon
+components/landing/   hero, features, how-it-works, templates, reviews, FAQ, CTA
+components/layout/    TopNav (responsive + session), SiteFooter (+ newsletter form)
+components/auth/      OAuth buttons + split-screen auth card
+components/three/     NodeGraph (R3F), Ambient3D client-only wrapper
+lib/site.ts           brand/SEO/contact config — update before deploying
+lib/blog.ts           blog posts as structured data
+middleware.ts         optional console gating (AUTH_ENFORCED=true)
+```
 
-- [Next.js Documentation](https://nextjs.org/docs) - learn about Next.js features and API.
-- [Learn Next.js](https://nextjs.org/learn) - an interactive Next.js tutorial.
+## Performance notes
 
-You can check out [the Next.js GitHub repository](https://github.com/vercel/next.js) - your feedback and contributions are welcome!
-
-## Deploy on Vercel
-
-The easiest way to deploy your Next.js app is to use the [Vercel Platform](https://vercel.com/new?utm_medium=default-template&filter=next.js&utm_source=create-next-app&utm_campaign=create-next-app-readme) from the creators of Next.js.
-
-Check out our [Next.js deployment documentation](https://nextjs.org/docs/app/building-your-application/deploying) for more details.
+- three.js is only loaded on pages that use it (`Ambient3D` → `next/dynamic`, `ssr: false`), capped DPR, reduced node count on mobile, honors `prefers-reduced-motion`.
+- Marketing pages are statically prerendered; the console pages stay dynamic for live backend data.
+- Security headers + immutable asset caching configured in `next.config.ts`.

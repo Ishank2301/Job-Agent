@@ -66,7 +66,7 @@ export async function api<T>(
         // If it's not valid JSON (e.g. HTML error page or plain text), use the raw text
         detail = text;
       }
-    } catch (e) {
+    } catch {
       detail = "Failed to read error response";
     }
 

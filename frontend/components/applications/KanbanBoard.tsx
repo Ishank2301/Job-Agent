@@ -63,7 +63,7 @@ export function KanbanBoard({ applications, jobs }: { applications: any[]; jobs:
               <span className="font-mono text-[11px] tracking-[0.2em]" style={{ color: col.color }}>
                 {col.label.toUpperCase()}
               </span>
-              <span className="font-mono text-xs text-zinc-600">{cards.length}</span>
+              <span className="font-mono text-xs text-faint">{cards.length}</span>
             </div>
             <div className="h-px w-full" style={{ background: `${col.color}33` }} />
 
@@ -73,18 +73,18 @@ export function KanbanBoard({ applications, jobs }: { applications: any[]; jobs:
                 return (
                   <div
                     key={app.id}
-                    className="rounded-lg border border-white/5 bg-zinc-950/80 p-3 transition hover:border-white/15"
+                    className="rounded-lg border border-line bg-surface-2/80 p-3 transition hover:border-line-strong"
                   >
-                    <p className="text-sm font-medium leading-snug text-zinc-200">
+                    <p className="text-sm font-medium leading-snug text-ink-soft">
                       {job?.title ?? "Unknown role"}
                     </p>
-                    <p className="mt-0.5 text-xs text-zinc-500">{job?.company ?? "—"}</p>
+                    <p className="mt-0.5 text-xs text-muted">{job?.company ?? "—"}</p>
 
                     {app.ats_score != null && (
                       <div className="mt-3">
-                        <div className="mb-1 flex justify-between font-mono text-[10px] text-zinc-500">
+                        <div className="mb-1 flex justify-between font-mono text-[10px] text-muted">
                           <span>ATS</span>
-                          <span className="text-amber-300">{Math.round(app.ats_score)}%</span>
+                          <span className="text-gold">{Math.round(app.ats_score)}%</span>
                         </div>
                         <Bar value={app.ats_score} />
                       </div>
@@ -93,7 +93,7 @@ export function KanbanBoard({ applications, jobs }: { applications: any[]; jobs:
                     <div className="mt-3 flex flex-wrap gap-1.5">
                       {col.next && (
                         <button
-                          className="rounded-md border border-white/10 px-2 py-1 text-[10px] font-medium text-zinc-300 transition hover:border-emerald-500/40 hover:text-emerald-300"
+                          className="rounded-md border border-line px-2 py-1 text-[10px] font-medium text-ink-soft transition hover:border-emerald-500/40 hover:text-accent"
                           onClick={() => move(app.id, col.next!)}
                           disabled={busy === app.id + col.next}
                         >
@@ -102,7 +102,7 @@ export function KanbanBoard({ applications, jobs }: { applications: any[]; jobs:
                       )}
                       {app.status === "SAVED" && (
                         <button
-                          className="rounded-md border border-white/10 px-2 py-1 text-[10px] font-medium text-emerald-300 transition hover:border-emerald-500/40"
+                          className="rounded-md border border-line px-2 py-1 text-[10px] font-medium text-accent transition hover:border-emerald-500/40"
                           onClick={() => runAgent(app.id)}
                           disabled={busy === app.id + "agent"}
                         >
@@ -111,7 +111,7 @@ export function KanbanBoard({ applications, jobs }: { applications: any[]; jobs:
                       )}
                       {col.key !== "REJECTED" && col.key !== "OFFER" && (
                         <button
-                          className="rounded-md px-2 py-1 text-[10px] text-zinc-600 transition hover:text-red-400"
+                          className="rounded-md px-2 py-1 text-[10px] text-faint transition hover:text-danger"
                           onClick={() => move(app.id, "REJECTED")}
                           disabled={busy === app.id + "REJECTED"}
                         >

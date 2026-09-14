@@ -78,7 +78,7 @@ export function JobsBoard({ jobs }: { jobs: any[] }) {
           ))}
         </select>
         <div className="ml-auto flex items-center gap-3">
-          {notice && <span className="text-xs text-amber-300">{notice}</span>}
+          {notice && <span className="text-xs text-gold">{notice}</span>}
           <button className="btn btn-primary" onClick={scrape} disabled={scraping}>
             {scraping ? "Queuing…" : "Scrape Jobs"}
           </button>
@@ -100,13 +100,13 @@ export function JobsBoard({ jobs }: { jobs: any[] }) {
             <article key={job.id} className={`card card-hover p-5 fade-up d${(i % 5) + 1}`}>
               <div className="flex flex-wrap items-start justify-between gap-4">
                 <div>
-                  <h2 className="text-base font-semibold text-zinc-100">{job.title}</h2>
-                  <p className="mt-1 text-sm text-zinc-500">
+                  <h2 className="text-base font-semibold text-ink">{job.title}</h2>
+                  <p className="mt-1 text-sm text-muted">
                     {job.company} · {job.location || "Location n/a"}
                   </p>
                 </div>
                 <div className="flex items-center gap-2">
-                  <Chip className="border-emerald-500/20 bg-emerald-500/10 text-emerald-300">
+                  <Chip className="border-accent-line bg-accent-soft text-accent">
                     {job.source}
                   </Chip>
                   <button
@@ -130,14 +130,14 @@ export function JobsBoard({ jobs }: { jobs: any[] }) {
               {job.description && (
                 <div className="mt-4">
                   <p
-                    className={`whitespace-pre-line text-sm leading-relaxed text-zinc-500 ${
+                    className={`whitespace-pre-line text-sm leading-relaxed text-muted ${
                       expanded === job.id ? "" : "line-clamp-3"
                     }`}
                   >
                     {job.description}
                   </p>
                   <button
-                    className="mt-2 font-mono text-[11px] tracking-[0.15em] text-emerald-400 hover:text-emerald-300"
+                    className="mt-2 font-mono text-[11px] tracking-[0.15em] text-accent hover:text-accent"
                     onClick={() => setExpanded(expanded === job.id ? null : job.id)}
                   >
                     {expanded === job.id ? "COLLAPSE ↑" : "READ FULL JD ↓"}
@@ -145,7 +145,7 @@ export function JobsBoard({ jobs }: { jobs: any[] }) {
                 </div>
               )}
 
-              <p className="mt-4 font-mono text-[10px] text-zinc-600">
+              <p className="mt-4 font-mono text-[10px] text-faint">
                 {new Date(job.scraped_at).toLocaleString()} · {job.url}
               </p>
             </article>

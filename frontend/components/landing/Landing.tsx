@@ -7,47 +7,16 @@ import {
   ChevronDown,
   FileText,
   Gauge,
-  Code2,
-  Briefcase,
+  LogIn,
   Mail,
   Radar,
   ShieldCheck,
-  Sparkles,
   SquareKanban,
   Star,
-  Send,
 } from "lucide-react";
+
+import { Ambient3D } from "@/components/three/Ambient3D";
 import { useBackendStatus } from "@/lib/useBackendStatus";
-
-/* ---------------- Nav ---------------- */
-
-function LandingNav() {
-  return (
-    <header className="glass fixed inset-x-0 top-0 z-50 border-b border-white/5">
-      <div className="shell flex h-16 items-center justify-between">
-        <Link href="/" className="flex items-center gap-2.5">
-          <span className="btn-glow grid h-8 w-8 place-items-center rounded-lg">
-            <Sparkles className="h-4 w-4" />
-          </span>
-          <span className="font-mono text-sm tracking-[0.26em] text-zinc-100">JOB·AGENT</span>
-        </Link>
-
-        <nav className="hidden items-center gap-6 text-[13px] text-zinc-400 md:flex">
-          <a href="#features" className="transition hover:text-white">Features</a>
-          <a href="#templates" className="transition hover:text-white">Templates</a>
-          <a href="#reviews" className="transition hover:text-white">Reviews</a>
-          <a href="#faqs" className="transition hover:text-white">FAQs</a>
-          <Link href="/docs" className="transition hover:text-white">Docs</Link>
-        </nav>
-
-        <div className="flex items-center gap-2">
-          <Link href="/dashboard" className="btn btn-ghost">Open Console</Link>
-          <Link href="/login" className="btn btn-glow">Get Started Free</Link>
-        </div>
-      </div>
-    </header>
-  );
-}
 
 /* ---------------- Hero helpers ---------------- */
 
@@ -56,7 +25,7 @@ function Counter({ to }: { to: number }) {
   useEffect(() => {
     const t = setInterval(
       () => setN((p) => (p >= to ? to : p + Math.ceil(to / 90))),
-      30
+      30,
     );
     return () => clearInterval(t);
   }, [to]);
@@ -72,32 +41,32 @@ function AtsPreviewCard() {
 
   const tags = ["langchain", "pytorch", "rag pipelines", "fastapi", "mlflow"].slice(
     0,
-    Math.max(0, Math.floor((score - 64) / 6))
+    Math.max(0, Math.floor((score - 64) / 6)),
   );
 
   return (
-    <div className="relative z-10 w-full max-w-sm rounded-2xl border border-zinc-700/70 bg-zinc-900/80 p-6 shadow-2xl shadow-violet-950/30 backdrop-blur-xl">
-      <div className="flex items-center justify-between border-b border-zinc-700/60 pb-4">
-        <p className="font-mono text-[11px] uppercase tracking-[0.25em] text-zinc-300">
+    <div className="relative z-10 w-full max-w-sm rounded-2xl border border-line bg-surface p-6 shadow-2xl shadow-black/10 backdrop-blur-xl">
+      <div className="flex items-center justify-between border-b border-line pb-4">
+        <p className="font-mono text-[11px] uppercase tracking-[0.25em] text-ink-soft">
           Live Tailoring
         </p>
-        <span className="rounded-full border border-cyan-500/20 bg-cyan-500/10 px-2.5 py-0.5 text-xs font-medium text-cyan-300">
+        <span className="rounded-full border border-accent-line bg-accent-soft px-2.5 py-0.5 text-xs font-medium text-accent">
           AI Active
         </span>
       </div>
 
       <div className="mt-5 space-y-2.5">
-        <div className="h-3 w-3/4 animate-pulse rounded-full bg-zinc-600/70" />
-        <div className="h-2 w-full rounded-full bg-zinc-700/70" />
-        <div className="h-2 w-5/6 rounded-full bg-zinc-700/70" />
-        <div className="h-2 w-2/3 rounded-full bg-zinc-700/70" />
+        <div className="h-3 w-3/4 animate-pulse rounded-full bg-surface-2" />
+        <div className="h-2 w-full rounded-full bg-surface-2" />
+        <div className="h-2 w-5/6 rounded-full bg-surface-2" />
+        <div className="h-2 w-2/3 rounded-full bg-surface-2" />
       </div>
 
       <div className="mt-5 flex min-h-[28px] flex-wrap gap-1.5">
         {tags.map((tag) => (
           <span
             key={tag}
-            className="rounded-full border border-emerald-500/25 bg-emerald-500/10 px-2.5 py-0.5 font-mono text-[11px] text-emerald-300"
+            className="rounded-full border border-accent-line bg-accent-soft px-2.5 py-0.5 font-mono text-[11px] text-accent"
           >
             + {tag}
           </span>
@@ -109,8 +78,8 @@ function AtsPreviewCard() {
           <div>{score}</div>
         </div>
         <div>
-          <p className="text-sm font-medium text-zinc-100">ATS Match</p>
-          <p className="mt-1 text-xs text-zinc-400">64% → 94% while you watch</p>
+          <p className="text-sm font-medium text-ink">ATS Match</p>
+          <p className="mt-1 text-xs text-muted">64% → 94% while you watch</p>
         </div>
       </div>
     </div>
@@ -120,48 +89,52 @@ function AtsPreviewCard() {
 /* ---------------- Hero ---------------- */
 
 function Hero() {
-  const status = useBackendStatus();
+  const { status } = useBackendStatus();
 
   return (
     <section className="relative z-10 shell grid items-center gap-12 pb-20 pt-16 lg:grid-cols-2">
       <div>
         <div className="chip">
           <span className={`pulse-dot ${status === "online" ? "" : "off"}`} />
-          {status === "online" ? "AGENT RUNNING" : "LOCAL MODE — START BACKEND TO GO LIVE"}
+          {status === "online"
+            ? "AGENT RUNNING"
+            : "LOCAL MODE — START BACKEND TO GO LIVE"}
         </div>
 
-        <h1 className="mt-6 text-5xl font-semibold leading-[1.08] tracking-tight text-zinc-50 md:text-6xl">
+        <h1 className="display mt-6 text-5xl font-semibold leading-[1.08] tracking-tight text-ink md:text-6xl">
           The AI agent that{" "}
-          <span
-            className="bg-clip-text text-transparent"
-            style={{
-              backgroundImage: "linear-gradient(90deg, #c4b5fd, #7dd3fc 50%, #6ee7b7)",
-            }}
-          >
+          <span className="text-accent-grad">
             discovers, tailors and applies
           </span>{" "}
           to jobs for you.
         </h1>
 
-        <p className="mt-6 max-w-xl text-lg leading-relaxed text-zinc-300">
-          Stop manual applications. Clear ATS filters, tailor a resume per role, and
-          automate outreach — with full human approval control before anything is sent.
+        <p className="mt-6 max-w-xl text-lg leading-relaxed text-ink-soft">
+          Stop manual applications. Clear ATS filters, tailor a resume per
+          role, and automate outreach — with full human approval control
+          before anything is sent.
         </p>
 
         <div className="mt-8 flex flex-wrap gap-3">
           <Link href="/login" className="btn btn-glow">
             Get Started Free <ArrowRight className="h-4 w-4" />
           </Link>
-          <Link href="/jobs" className="btn btn-ghost">
+          <Link href="/dashboard" className="btn btn-ghost">
             Open Live Console
           </Link>
         </div>
 
-        <div className="mt-10 flex flex-wrap items-center gap-6 text-sm text-zinc-400">
-          <span><Counter to={210000} /> applications automated</span>
+        <p className="mt-4 text-xs text-muted">
+          No credit card · Self-hostable · DRY_RUN by default
+        </p>
+
+        <div className="mt-10 flex flex-wrap items-center gap-6 text-sm text-muted">
+          <span>
+            <Counter to={210000} /> applications automated
+          </span>
           <span className="flex items-center gap-1.5">
             {[...Array(5)].map((_, i) => (
-              <Star key={i} className="h-4 w-4 fill-amber-300 text-amber-300" />
+              <Star key={i} className="h-4 w-4 fill-gold text-gold" />
             ))}
             4.8/5 early-user rating
           </span>
@@ -170,6 +143,30 @@ function Hero() {
 
       <div className="relative z-10 flex justify-center lg:justify-end">
         <AtsPreviewCard />
+      </div>
+    </section>
+  );
+}
+
+/* ---------------- Trust strip ---------------- */
+
+const SOURCES = ["LinkedIn", "Indeed", "Glassdoor", "Greenhouse", "Lever"];
+
+function TrustStrip() {
+  return (
+    <section className="shell pb-16" aria-label="Supported job sources">
+      <p className="text-center font-mono text-[11px] uppercase tracking-[0.3em] text-faint">
+        Aggregates roles from
+      </p>
+      <div className="mt-5 flex flex-wrap items-center justify-center gap-x-10 gap-y-3">
+        {SOURCES.map((s) => (
+          <span
+            key={s}
+            className="text-sm font-medium text-faint transition hover:text-muted"
+          >
+            {s}
+          </span>
+        ))}
       </div>
     </section>
   );
@@ -226,31 +223,84 @@ function Features() {
   return (
     <section id="features" className="shell py-20">
       <p className="eyebrow">Capabilities</p>
-      <h2 className="mt-3 max-w-xl text-3xl font-semibold tracking-tight text-zinc-50">
+      <h2 className="display mt-3 max-w-xl text-3xl font-semibold tracking-tight text-ink">
         Everything between{" "}
-        <span
-          className="bg-clip-text text-transparent"
-          style={{ backgroundImage: "linear-gradient(90deg, #c4b5fd, #7dd3fc 50%, #6ee7b7)" }}
-        >
-          "job posted" and "offer signed"
+        <span className="text-accent-grad">
+          “job posted” and “offer signed”
         </span>
         .
       </h2>
 
       <div className="mt-10 grid gap-3 md:grid-cols-3">
         {FEATURES.map((f, i) => (
-          <div key={f.title} className={`card-grad card-hover p-6 fade-up d${(i % 6) + 1} ${f.span}`}>
+          <div
+            key={f.title}
+            className={`card-grad card-hover p-6 fade-up d${(i % 6) + 1} ${f.span}`}
+          >
             <div className="flex items-center justify-between">
-              <span className="grid h-9 w-9 place-items-center rounded-lg border border-violet-500/20 bg-violet-500/10 text-violet-300">
+              <span className="grid h-9 w-9 place-items-center rounded-lg border border-accent-line bg-accent-soft text-accent">
                 <f.icon className="h-4 w-4" />
               </span>
               <span className="chip">{f.tag}</span>
             </div>
-            <h3 className="mt-4 text-base font-semibold text-zinc-100">{f.title}</h3>
-            <p className="mt-2 text-sm leading-relaxed text-zinc-400">{f.desc}</p>
+            <h3 className="mt-4 text-base font-semibold text-ink">{f.title}</h3>
+            <p className="mt-2 text-sm leading-relaxed text-muted">{f.desc}</p>
           </div>
         ))}
       </div>
+    </section>
+  );
+}
+
+/* ---------------- How it works ---------------- */
+
+const STEPS = [
+  {
+    icon: LogIn,
+    step: "01",
+    title: "Connect",
+    desc: "Sign in with Google or GitHub. Your workspace, resume vault and pipeline are provisioned instantly — no forms, no passwords to manage.",
+  },
+  {
+    icon: Radar,
+    step: "02",
+    title: "Discover & tailor",
+    desc: "The agent scrapes fresh roles, dedupes them, scores each JD against your resume, and rewrites bullets to match — without inventing a single fact.",
+  },
+  {
+    icon: ShieldCheck,
+    step: "03",
+    title: "Review & approve",
+    desc: "Every outreach email and form fill waits for your explicit click. Nothing leaves the system until you say so — and one toggle shuts it all off.",
+  },
+];
+
+function HowItWorks() {
+  return (
+    <section id="how" className="shell py-20">
+      <p className="eyebrow">How it works</p>
+      <h2 className="display mt-3 max-w-xl text-3xl font-semibold tracking-tight text-ink">
+        From sign-in to sent outreach in{" "}
+        <span className="grad-text">three supervised steps</span>.
+      </h2>
+
+      <ol className="mt-10 grid gap-3 md:grid-cols-3">
+        {STEPS.map((s, i) => (
+          <li
+            key={s.step}
+            className={`card-grad card-hover relative p-6 fade-up d${i + 1}`}
+          >
+            <span className="absolute right-5 top-5 font-mono text-xs text-faint">
+              {s.step}
+            </span>
+            <span className="grid h-9 w-9 place-items-center rounded-lg border border-accent-line bg-accent-soft text-accent">
+              <s.icon className="h-4 w-4" />
+            </span>
+            <h3 className="mt-4 text-base font-semibold text-ink">{s.title}</h3>
+            <p className="mt-2 text-sm leading-relaxed text-muted">{s.desc}</p>
+          </li>
+        ))}
+      </ol>
     </section>
   );
 }
@@ -277,7 +327,7 @@ function Templates() {
       <div className="flex flex-wrap items-end justify-between gap-4">
         <div>
           <p className="eyebrow">Template Studio</p>
-          <h2 className="mt-3 text-3xl font-semibold tracking-tight text-zinc-50">
+          <h2 className="display mt-3 text-3xl font-semibold tracking-tight text-ink">
             Designs that pass screeners and impress humans.
           </h2>
         </div>
@@ -287,7 +337,7 @@ function Templates() {
               key={c}
               onClick={() => setCat(c)}
               className={`rounded-full px-3.5 py-1.5 text-xs transition ${
-                cat === c ? "bg-white/10 text-white" : "text-zinc-500 hover:text-zinc-200"
+                cat === c ? "bg-surface-2 text-ink" : "text-muted hover:text-ink-soft"
               }`}
             >
               {c}
@@ -298,29 +348,34 @@ function Templates() {
 
       <div className="mt-8 grid gap-4 sm:grid-cols-2 lg:grid-cols-3">
         {shown.map((t, i) => (
-          <div key={t.name} className={`card-grad card-hover group relative overflow-hidden p-5 fade-up d${(i % 5) + 1}`}>
-            <div className="rounded-lg border border-white/5 bg-zinc-950 p-4">
+          <div
+            key={t.name}
+            className={`card-grad card-hover group relative overflow-hidden p-5 fade-up d${(i % 5) + 1}`}
+          >
+            <div className="rounded-lg border border-line bg-surface-2 p-4">
               <div className="h-2.5 w-1/2 rounded" style={{ background: t.accent }} />
               <div className="mt-3 space-y-1.5">
-                <div className="h-1.5 w-full rounded bg-white/10" />
-                <div className="h-1.5 w-5/6 rounded bg-white/10" />
-                <div className="h-1.5 w-2/3 rounded bg-white/10" />
+                <div className="h-1.5 w-full rounded bg-surface-2" />
+                <div className="h-1.5 w-5/6 rounded bg-surface-2" />
+                <div className="h-1.5 w-2/3 rounded bg-surface-2" />
               </div>
               <div className="mt-3 grid grid-cols-2 gap-1.5">
-                <div className="h-8 rounded bg-white/5" />
-                <div className="h-8 rounded bg-white/5" />
+                <div className="h-8 rounded bg-surface-2" />
+                <div className="h-8 rounded bg-surface-2" />
               </div>
             </div>
 
             <div className="mt-4 flex items-center justify-between">
               <div>
-                <p className="text-sm font-semibold text-zinc-100">{t.name}</p>
-                <p className="text-xs text-zinc-500">{t.cat}</p>
+                <p className="text-sm font-semibold text-ink">{t.name}</p>
+                <p className="text-xs text-muted">{t.cat}</p>
               </div>
             </div>
 
-            <div className="absolute inset-0 grid place-items-center bg-zinc-950/70 opacity-0 backdrop-blur-[2px] transition group-hover:opacity-100">
-              <Link href="/resume-studio" className="btn btn-glow">Use This Template</Link>
+            <div className="absolute inset-0 grid place-items-center bg-bg/90 opacity-0 backdrop-blur-[2px] transition group-hover:opacity-100">
+              <Link href="/resume-studio" className="btn btn-glow">
+                Use This Template
+              </Link>
             </div>
           </div>
         ))}
@@ -354,7 +409,7 @@ function Reviews() {
   return (
     <section id="reviews" className="shell py-20">
       <p className="eyebrow">Early Users</p>
-      <h2 className="mt-3 text-3xl font-semibold tracking-tight text-zinc-50">
+      <h2 className="display mt-3 text-3xl font-semibold tracking-tight text-ink">
         Trusted by people who hate applying manually.
       </h2>
 
@@ -363,12 +418,12 @@ function Reviews() {
           <div key={r.name} className={`card-grad p-6 fade-up d${i + 1}`}>
             <div className="flex gap-1">
               {[...Array(5)].map((_, s) => (
-                <Star key={s} className="h-3.5 w-3.5 fill-amber-300 text-amber-300" />
+                <Star key={s} className="h-3.5 w-3.5 fill-gold text-gold" />
               ))}
             </div>
-            <p className="mt-4 text-sm leading-relaxed text-zinc-300">"{r.quote}"</p>
-            <p className="mt-4 text-sm font-medium text-zinc-100">{r.name}</p>
-            <p className="text-xs text-zinc-500">{r.role}</p>
+            <p className="mt-4 text-sm leading-relaxed text-ink-soft">“{r.quote}”</p>
+            <p className="mt-4 text-sm font-medium text-ink">{r.name}</p>
+            <p className="text-xs text-muted">{r.role}</p>
           </div>
         ))}
       </div>
@@ -389,7 +444,7 @@ const FAQS = [
   },
   {
     q: "Is my data private?",
-    a: "Everything lives in your own PostgreSQL database and local environment variables. No third-party resume databases, no data resale, no telemetry by default.",
+    a: "Everything lives in your own PostgreSQL database and local environment variables. No third-party resume databases, no data resale, no telemetry by default. See the Privacy Policy for details.",
   },
   {
     q: "Which job boards are supported?",
@@ -411,7 +466,7 @@ function Faq() {
   return (
     <section id="faqs" className="shell max-w-4xl py-20">
       <p className="eyebrow text-center">Questions</p>
-      <h2 className="mt-3 text-center text-3xl font-semibold tracking-tight text-zinc-50">
+      <h2 className="display mt-3 text-center text-3xl font-semibold tracking-tight text-ink">
         Everything people ask before trusting an agent.
       </h2>
 
@@ -419,12 +474,15 @@ function Faq() {
         {FAQS.map((f, i) => (
           <div key={f.q} className="card-grad overflow-hidden">
             <button
-              className="flex w-full items-center justify-between px-6 py-4 text-left text-sm font-medium text-zinc-200"
+              className="flex w-full items-center justify-between gap-4 px-6 py-4 text-left text-sm font-medium text-ink-soft"
               onClick={() => setOpen(open === i ? null : i)}
+              aria-expanded={open === i}
             >
               {f.q}
               <ChevronDown
-                className={`h-4 w-4 text-zinc-500 transition-transform ${open === i ? "rotate-180" : ""}`}
+                className={`h-4 w-4 shrink-0 text-muted transition-transform ${
+                  open === i ? "rotate-180" : ""
+                }`}
               />
             </button>
             <div
@@ -433,7 +491,7 @@ function Faq() {
               }`}
             >
               <div className="overflow-hidden">
-                <p className="px-6 pb-5 text-sm leading-relaxed text-zinc-400">{f.a}</p>
+                <p className="px-6 pb-5 text-sm leading-relaxed text-muted">{f.a}</p>
               </div>
             </div>
           </div>
@@ -443,90 +501,31 @@ function Faq() {
   );
 }
 
-/* ---------------- Footer ---------------- */
+/* ---------------- CTA band ---------------- */
 
-function Footer() {
-  const [subscribed, setSubscribed] = useState(false);
-
+function CtaBand() {
   return (
-    <footer className="border-t border-white/5 py-14">
-      <div className="shell grid gap-10 md:grid-cols-5">
-        <div className="md:col-span-2">
-          <div className="flex items-center gap-2.5">
-            <span className="btn-glow grid h-8 w-8 place-items-center rounded-lg">
-              <Sparkles className="h-4 w-4" />
-            </span>
-            <span className="font-mono text-sm tracking-[0.26em] text-zinc-100">JOB·AGENT</span>
-          </div>
-          <p className="mt-4 max-w-xs text-sm leading-relaxed text-zinc-500">
-            Autonomous career operations with a human holding the keys.
-          </p>
-          <div className="mt-5 flex gap-3 text-zinc-500">
-            <Code2 className="h-4 w-4 transition hover:text-white" />
-            <Send className="h-4 w-4 transition hover:text-white" />
-            <Briefcase className="h-4 w-4 transition hover:text-white" />
-          </div>
-        </div>
-
-        {[
-          {
-            h: "Product",
-            links: [
-              ["Features", "#features"],
-              ["Templates", "#templates"],
-              ["Console", "/dashboard"],
-              ["Jobs", "/jobs"],
-            ],
-          },
-          {
-            h: "Resources",
-            links: [
-              ["Docs", "/docs"],
-              ["API Reference", "/docs/api"],
-              ["Safety Model", "/docs"],
-              ["FAQs", "#faqs"],
-            ],
-          },
-          {
-            h: "Company",
-            links: [
-              ["Reviews", "#reviews"],
-              ["Settings", "/settings"],
-              ["Recruiters", "/recruiters"],
-              ["Status", "/"],
-            ],
-          },
-        ].map((col) => (
-          <div key={col.h}>
-            <p className="eyebrow">{col.h}</p>
-            <ul className="mt-4 space-y-2.5 text-sm text-zinc-500">
-              {col.links.map(([label, href]) => (
-                <li key={label}>
-                  <Link href={href} className="transition hover:text-zinc-200">
-                    {label}
-                  </Link>
-                </li>
-              ))}
-            </ul>
-          </div>
-        ))}
-      </div>
-
-      <div className="shell mt-12 flex flex-wrap items-center justify-between gap-4 border-t border-white/5 pt-6">
-        <p className="font-mono text-[11px] text-zinc-600">
-          © 2026 JOB·AGENT — DRY_RUN BY DEFAULT · ZERO AUTO-SUBMITS
+    <section className="shell pb-24">
+      <div className="card-grad hero-glow relative overflow-hidden p-10 text-center md:p-14">
+        <p className="eyebrow">Ready when you are</p>
+        <h2 className="display mx-auto mt-3 max-w-2xl text-3xl font-semibold tracking-tight text-ink md:text-4xl">
+          Your next role is already posted. Start shortlisting in minutes.
+        </h2>
+        <p className="mx-auto mt-4 max-w-xl text-sm leading-relaxed text-muted">
+          Free to start, self-hostable, and every outbound action sits behind a
+          hard human-approval gate. Sign in and watch your first tailored
+          resume score itself.
         </p>
-        {subscribed ? (
-          <span className="chip border-emerald-500/20 bg-emerald-500/10 text-emerald-300">
-            SUBSCRIBED ✓
-          </span>
-        ) : (
-          <button className="btn btn-ghost" onClick={() => setSubscribed(true)}>
-            <Mail className="h-4 w-4" /> Get product updates
-          </button>
-        )}
+        <div className="mt-8 flex flex-wrap justify-center gap-3">
+          <Link href="/login" className="btn btn-glow">
+            Get Started Free <ArrowRight className="h-4 w-4" />
+          </Link>
+          <Link href="/contact" className="btn btn-ghost">
+            Talk to Us
+          </Link>
+        </div>
       </div>
-    </footer>
+    </section>
   );
 }
 
@@ -535,15 +534,17 @@ function Footer() {
 export function Landing() {
   return (
     <div className="relative">
-      <LandingNav />
+      <Ambient3D />
       <div className="grid-bg hero-glow">
         <Hero />
       </div>
+      <TrustStrip />
       <Features />
+      <HowItWorks />
       <Templates />
       <Reviews />
       <Faq />
-      <Footer />
+      <CtaBand />
     </div>
   );
 }

@@ -350,3 +350,49 @@ class AutofillSession(Base):
         server_default=text("now()"),
         onupdate=datetime.utcnow,
     )
+
+
+class NewsletterSubscriber(Base):
+    __tablename__ = "newsletter_subscribers"
+
+    id: Mapped[str] = mapped_column(String(36), primary_key=True, default=generate_uuid)
+    email: Mapped[str] = mapped_column(
+        CITEXT(320), nullable=False, unique=True, index=True
+    )
+    source: Mapped[str] = mapped_column(String(50), nullable=False, default="web")
+
+    created_at: Mapped[datetime] = mapped_column(
+        DateTime,
+        nullable=False,
+        server_default=text("now()"),
+    )
+
+
+class UserProfile(Base):
+    """Personalization profile captured during onboarding."""
+
+    __tablename__ = "user_profiles"
+
+    id: Mapped[str] = mapped_column(String(36), primary_key=True, default=generate_uuid)
+    email: Mapped[str] = mapped_column(
+        CITEXT(320), nullable=False, unique=True, index=True
+    )
+    full_name: Mapped[str] = mapped_column(String(120), nullable=False, default="")
+    career_stage: Mapped[str] = mapped_column(String(60), nullable=False, default="")
+    target_roles: Mapped[list] = mapped_column(JSONB, nullable=False, default=list)
+    target_locations: Mapped[str] = mapped_column(String(255), nullable=False, default="")
+    remote_only: Mapped[bool] = mapped_column(Boolean, nullable=False, default=False)
+    weekly_goal: Mapped[int] = mapped_column(Integer, nullable=False, default=10)
+    onboarded: Mapped[bool] = mapped_column(Boolean, nullable=False, default=False)
+
+    created_at: Mapped[datetime] = mapped_column(
+        DateTime,
+        nullable=False,
+        server_default=text("now()"),
+    )
+    updated_at: Mapped[datetime] = mapped_column(
+        DateTime,
+        nullable=False,
+        server_default=text("now()"),
+        onupdate=datetime.utcnow,
+    )

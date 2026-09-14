@@ -42,7 +42,10 @@ export function ResumeStudio({ master, applications, jobs }: Props) {
   }, []);
 
   useEffect(() => {
-    load(selected);
+    const t = setTimeout(() => {
+      load(selected);
+    }, 0);
+    return () => clearTimeout(t);
   }, [selected, load]);
 
   async function tailor() {
@@ -93,7 +96,7 @@ export function ResumeStudio({ master, applications, jobs }: Props) {
       {/* ===== Self-completing onboarding checklist ===== */}
       <div className="card-grad p-6 fade-up">
         <div className="flex items-center gap-2">
-          <Sparkles className="h-4 w-4 text-violet-300" />
+          <Sparkles className="h-4 w-4 text-accent" />
           <p className="eyebrow">Setup Checklist</p>
         </div>
 
@@ -101,15 +104,15 @@ export function ResumeStudio({ master, applications, jobs }: Props) {
           {steps.map((s, i) => (
             <div
               key={s.label}
-              className="flex items-start gap-3 rounded-lg border border-white/5 bg-white/[0.02] p-4"
+              className="flex items-start gap-3 rounded-lg border border-line bg-surface-2 p-4"
             >
               {s.done ? (
-                <CheckCircle2 className="mt-0.5 h-4 w-4 shrink-0 text-emerald-400" />
+                <CheckCircle2 className="mt-0.5 h-4 w-4 shrink-0 text-accent" />
               ) : (
-                <Circle className="mt-0.5 h-4 w-4 shrink-0 text-zinc-600" />
+                <Circle className="mt-0.5 h-4 w-4 shrink-0 text-faint" />
               )}
               <div>
-                <p className={`text-sm ${s.done ? "text-zinc-500 line-through" : "text-zinc-200"}`}>
+                <p className={`text-sm ${s.done ? "text-muted line-through" : "text-ink-soft"}`}>
                   {i + 1}. {s.label}
                 </p>
                 {!s.done && s.href && (
@@ -128,38 +131,38 @@ export function ResumeStudio({ master, applications, jobs }: Props) {
         <div className="card p-6 fade-up d1">
           <div className="flex items-center justify-between">
             <p className="eyebrow">Master Resume · Locked Template</p>
-            <Chip className="border-emerald-500/20 bg-emerald-500/10 text-emerald-300">
+            <Chip className="border-accent-line bg-accent-soft text-accent">
               {master?.template_id ?? "default"}
             </Chip>
           </div>
 
           {!master ? (
             <div className="flex flex-col items-center gap-3 py-16 text-center">
-              <Lock className="h-6 w-6 text-zinc-600" />
-              <p className="text-sm text-zinc-400">Master resume unavailable — backend offline.</p>
-              <p className="max-w-xs text-xs text-zinc-600">
+              <Lock className="h-6 w-6 text-faint" />
+              <p className="text-sm text-muted">Master resume unavailable — backend offline.</p>
+              <p className="max-w-xs text-xs text-faint">
                 Start the FastAPI backend to load your locked template and skill whitelist.
               </p>
             </div>
           ) : (
             <div className="mt-6 space-y-6">
               <div>
-                <p className="font-mono text-[11px] tracking-[0.2em] text-zinc-500">
+                <p className="font-mono text-[11px] tracking-[0.2em] text-muted">
                   PERSONAL · FROZEN
                 </p>
-                <p className="mt-2 text-sm text-zinc-300">{master?.personal?.name}</p>
-                <p className="text-xs text-zinc-600">
+                <p className="mt-2 text-sm text-ink-soft">{master?.personal?.name}</p>
+                <p className="text-xs text-faint">
                   {master?.personal?.email} · {master?.personal?.phone}
                 </p>
               </div>
 
               <div>
-                <p className="font-mono text-[11px] tracking-[0.2em] text-zinc-500">SUMMARY</p>
-                <p className="mt-2 text-sm leading-relaxed text-zinc-400">{master?.summary}</p>
+                <p className="font-mono text-[11px] tracking-[0.2em] text-muted">SUMMARY</p>
+                <p className="mt-2 text-sm leading-relaxed text-muted">{master?.summary}</p>
               </div>
 
               <div>
-                <p className="font-mono text-[11px] tracking-[0.2em] text-zinc-500">
+                <p className="font-mono text-[11px] tracking-[0.2em] text-muted">
                   SKILLS · WHITELIST
                 </p>
                 <div className="mt-2 flex flex-wrap gap-1.5">
@@ -170,14 +173,14 @@ export function ResumeStudio({ master, applications, jobs }: Props) {
               </div>
 
               <div>
-                <p className="font-mono text-[11px] tracking-[0.2em] text-zinc-500">EXPERIENCE</p>
+                <p className="font-mono text-[11px] tracking-[0.2em] text-muted">EXPERIENCE</p>
                 <div className="mt-2 space-y-3">
                   {(master?.experience_entries ?? []).map((exp: any) => (
                     <div key={exp.company}>
-                      <p className="text-sm text-zinc-300">
+                      <p className="text-sm text-ink-soft">
                         {exp.title} · {exp.company}
                       </p>
-                      <ul className="mt-1 list-disc space-y-0.5 pl-4 text-xs text-zinc-500">
+                      <ul className="mt-1 list-disc space-y-0.5 pl-4 text-xs text-muted">
                         {exp.bullets.map((b: string) => (
                           <li key={b}>{b}</li>
                         ))}
@@ -236,8 +239,8 @@ export function ResumeStudio({ master, applications, jobs }: Props) {
               <div className="mt-6 flex items-center gap-6">
                 <AtsDial score={versions[0]?.ats_score ?? null} />
                 <div>
-                  <p className="text-sm font-medium text-zinc-200">Latest ATS Score</p>
-                  <p className="mt-1 text-xs leading-relaxed text-zinc-500">
+                  <p className="text-sm font-medium text-ink-soft">Latest ATS Score</p>
+                  <p className="mt-1 text-xs leading-relaxed text-muted">
                     Target band 75–85%. Summary & skills keywords weigh 3×, bullets 1×.
                   </p>
                 </div>
@@ -250,28 +253,28 @@ export function ResumeStudio({ master, applications, jobs }: Props) {
               >
                 {busy ? "Tailoring…" : "Tailor Resume for this JD"}
               </button>
-              {notice && <p className="mt-3 text-xs text-amber-300">{notice}</p>}
+              {notice && <p className="mt-3 text-xs text-gold">{notice}</p>}
 
               <div className="mt-8">
-                <p className="font-mono text-[11px] tracking-[0.2em] text-zinc-500">
+                <p className="font-mono text-[11px] tracking-[0.2em] text-muted">
                   VERSION HISTORY
                 </p>
                 <div className="mt-3 space-y-2">
                   {versions.length === 0 && (
-                    <p className="text-xs text-zinc-600">
+                    <p className="text-xs text-faint">
                       No versions yet — run a tailoring pass to create v1.
                     </p>
                   )}
                   {versions.map((v: any) => (
                     <div
                       key={v.id}
-                      className="flex items-center justify-between rounded-lg border border-white/5 bg-white/[0.02] px-4 py-2.5"
+                      className="flex items-center justify-between rounded-lg border border-line bg-surface-2 px-4 py-2.5"
                     >
-                      <span className="font-mono text-xs text-zinc-300">v{v.version}</span>
-                      <span className="font-mono text-xs text-amber-300">
+                      <span className="font-mono text-xs text-ink-soft">v{v.version}</span>
+                      <span className="font-mono text-xs text-gold">
                         {v.ats_score != null ? `${Math.round(v.ats_score)}%` : "—"}
                       </span>
-                      <span className="font-mono text-[10px] text-zinc-600">
+                      <span className="font-mono text-[10px] text-faint">
                         {new Date(v.created_at).toLocaleString()}
                       </span>
                     </div>
@@ -281,12 +284,12 @@ export function ResumeStudio({ master, applications, jobs }: Props) {
 
               <div className="mt-8 rounded-lg border border-emerald-500/15 bg-emerald-500/5 p-4">
                 <div className="flex items-center gap-2">
-                  <ShieldCheck className="h-4 w-4 text-emerald-300" />
-                  <p className="font-mono text-[11px] tracking-[0.2em] text-emerald-300">
+                  <ShieldCheck className="h-4 w-4 text-accent" />
+                  <p className="font-mono text-[11px] tracking-[0.2em] text-accent">
                     GUARDRAILS ACTIVE
                   </p>
                 </div>
-                <ul className="mt-2 space-y-1 text-xs text-zinc-400">
+                <ul className="mt-2 space-y-1 text-xs text-muted">
                   <li>· Personal data frozen — never rewritten</li>
                   <li>· Template locked — same layout every version</li>
                   <li>· Skill whitelist — LLM cannot invent tools</li>

@@ -1,59 +1,85 @@
 import "./globals.css";
 
-import type { Metadata } from "next";
+import type { Metadata, Viewport } from "next";
+import { Fraunces, Inter } from "next/font/google";
+import { SessionProvider } from "next-auth/react";
 
-import { TopNav } from "@/components/layout/TopNav";
-import { NodeGraph } from "@/components/three/NodeGraph";
-import { api } from "@/lib/api";
+import { THEME_SCRIPT, ThemeProvider } from "@/components/theme/ThemeProvider";
+import { site } from "@/lib/site";
+
+const inter = Inter({
+  subsets: ["latin"],
+  variable: "--font-sans-body",
+  display: "swap",
+});
+
+const fraunces = Fraunces({
+  subsets: ["latin"],
+  variable: "--font-display",
+  display: "swap",
+  axes: ["opsz"],
+});
 
 export const metadata: Metadata = {
-  title: "Job Application Agent",
-  description: "Enterprise-grade automated career agent",
+  metadataBase: new URL(site.url),
+  title: {
+    default: `${site.name} — AI job applications with human-in-the-loop control`,
+    template: `%s · ${site.name}`,
+  },
+  description: site.description,
+  keywords: [...site.keywords],
+  applicationName: site.name,
+  authors: [{ name: site.name, url: site.url }],
+  creator: site.name,
+  openGraph: {
+    type: "website",
+    siteName: site.name,
+    title: `${site.name} — ${site.tagline}`,
+    description: site.description,
+    url: "/",
+    locale: "en_US",
+  },
+  twitter: {
+    card: "summary_large_image",
+    title: `${site.name} — ${site.tagline}`,
+    description: site.description,
+  },
+  robots: {
+    index: true,
+    follow: true,
+    googleBot: { index: true, follow: true, "max-image-preview": "large" },
+  },
+  category: "technology",
 };
 
-export const dynamic = "force-dynamic";
+export const viewport: Viewport = {
+  themeColor: [
+    { media: "(prefers-color-scheme: light)", color: "#f7f5f1" },
+    { media: "(prefers-color-scheme: dark)", color: "#131211" },
+  ],
+  width: "device-width",
+  initialScale: 1,
+};
 
-async function getSystemState() {
-  try {
-    const [health, settings] = await Promise.all([
-      api<never>("/health"),
-      api<{ dry_run: boolean }>("/settings"),
-    ]);
-
-    return { online: true, dryRun: settings.dry_run };
-  } catch {
-    return { online: false, dryRun: true };
-  }
-}
-
-export default async function RootLayout({
+export default function RootLayout({
   children,
 }: {
   children: React.ReactNode;
 }) {
-  const sys = await getSystemState();
-
   return (
-    <html lang="en" className="dark">
-      <body className="bg-[#09090b] text-zinc-100 antialiased">
-        <NodeGraph />
-        <TopNav dryRun={sys.dryRun} />
-
-        <main className="relative z-10 pb-20 pt-24">
-          {children}
-        </main>
-
-        <footer className="border-t border-white/5 py-8">
-          <div className="shell flex flex-wrap items-center justify-between gap-4">
-            <p className="font-mono text-[11px] tracking-[0.2em] text-zinc-600">
-              JOB·AGENT — ENTERPRISE CAREER AUTOMATION
-            </p>
-
-            <p className="font-mono text-[11px] text-zinc-600">
-              DRY_RUN BY DEFAULT · ZERO AUTO-SUBMITS · HUMAN-IN-THE-LOOP
-            </p>
-          </div>
-        </footer>
+    <html lang="en" suppressHydrationWarning>
+      <body
+        className={`${inter.variable} ${fraunces.variable} min-h-screen bg-bg font-sans text-ink antialiased`}
+      >
+        <script dangerouslySetInnerHTML={{ __html: THEME_SCRIPT }} />
+        <SessionProvider>
+          <ThemeProvider>
+            <a href="#main" className="skip-link">
+              Skip to content
+            </a>
+            {children}
+          </ThemeProvider>
+        </SessionProvider>
       </body>
     </html>
   );

@@ -1,6 +1,6 @@
 "use client";
 
-import { useCallback, useEffect, useState } from "react";
+import { useCallback, useEffect, useState, useMemo } from "react";
 import Link from "next/link";
 import { useRouter } from "next/navigation";
 import {
@@ -29,7 +29,9 @@ export function ResumeStudio({ master, applications, jobs }: Props) {
   const [busy, setBusy] = useState(false);
   const [notice, setNotice] = useState<string | null>(null);
 
-  const jobById = new Map(jobs.map((j) => [j.id, j]));
+  // ⚡ Bolt: Memoize job map to prevent O(N) recalculation on every re-render (e.g. data fetching or selected app changes)
+  // Expected impact: Eliminates unnecessary iteration over `jobs` array on every render.
+  const jobById = useMemo(() => new Map(jobs.map((j) => [j.id, j])), [jobs]);
 
   const load = useCallback(async (appId: string) => {
     if (!appId) return;

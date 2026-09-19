@@ -1,6 +1,6 @@
 "use client";
 
-import { useState } from "react";
+import { useState, useMemo } from "react";
 import { useRouter } from "next/navigation";
 import { api } from "@/lib/api";
 import { Bar, EmptyState } from "@/components/ui/kit";
@@ -17,7 +17,9 @@ const COLUMNS = [
 export function KanbanBoard({ applications, jobs }: { applications: any[]; jobs: any[] }) {
   const router = useRouter();
   const [busy, setBusy] = useState<string | null>(null);
-  const jobById = new Map(jobs.map((j) => [j.id, j]));
+  // ⚡ Bolt: Memoize job map to prevent O(N) recalculation on every re-render (e.g. status changes)
+  // Expected impact: Eliminates unnecessary iteration over `jobs` array on every render.
+  const jobById = useMemo(() => new Map(jobs.map((j) => [j.id, j])), [jobs]);
 
   async function move(id: string, status: string) {
     setBusy(id + status);

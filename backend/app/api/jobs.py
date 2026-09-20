@@ -15,16 +15,28 @@ async def persist_scraped_jobs() -> None:
 
     jobs = await scrape_all_jobs()
 
+    if not jobs:
+        return
+
+    # ⚡ Bolt: Extract URLs and IDs to query only what's necessary (O(N) -> O(1) memory for DB fetch)
+    job_urls = [job.url for job in jobs]
+    job_external_ids = [job.external_id for job in jobs]
+
     async with AsyncSessionLocal() as db:
-        existing_urls_result = await db.execute(select(Job.url))
+        # ⚡ Bolt: Filter by scraped subset to prevent massive memory usage as DB grows
+        existing_urls_result = await db.execute(select(Job.url).where(Job.url.in_(job_urls)))
         existing_urls = {row[0] for row in existing_urls_result.all()}
 
-        existing_external_ids_result = await db.execute(select(Job.external_id))
+        existing_external_ids_result = await db.execute(select(Job.external_id).where(Job.external_id.in_(job_external_ids)))
         existing_external_ids = {row[0] for row in existing_external_ids_result.all()}
 
         for job in jobs:
             if job.url in existing_urls or job.external_id in existing_external_ids:
                 continue
+
+            # ⚡ Bolt: Add to set to prevent duplicates within the scraped batch itself
+            existing_urls.add(job.url)
+            existing_external_ids.add(job.external_id)
 
             db.add(
                 Job(

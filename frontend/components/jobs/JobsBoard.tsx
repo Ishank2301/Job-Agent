@@ -19,18 +19,23 @@ export function JobsBoard({ jobs }: { jobs: any[] }) {
     [jobs]
   );
 
+  // ⚡ Bolt: Precompute search strings to avoid O(N) string concatenation and lowercasing on every keystroke
+  // Expected impact: Significantly reduces work during filter operations, improving search responsiveness for large job lists.
+  const jobsWithSearchStrings = useMemo(() => {
+    return jobs.map((job) => ({
+      ...job,
+      _searchString: `${job.title} ${job.company} ${job.location} ${(job.skills ?? []).join(" ")}`.toLowerCase(),
+    }));
+  }, [jobs]);
+
   const filtered = useMemo(() => {
     const q = query.toLowerCase();
-    return jobs.filter((job) => {
+    return jobsWithSearchStrings.filter((job) => {
       const matchesSource = source === "all" || job.source === source;
-      const matchesQuery =
-        q === "" ||
-        `${job.title} ${job.company} ${job.location} ${(job.skills ?? []).join(" ")}`
-          .toLowerCase()
-          .includes(q);
+      const matchesQuery = q === "" || job._searchString.includes(q);
       return matchesSource && matchesQuery;
     });
-  }, [jobs, query, source]);
+  }, [jobsWithSearchStrings, query, source]);
 
   async function scrape() {
     setScraping(true);

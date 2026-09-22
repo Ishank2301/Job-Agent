@@ -17,9 +17,23 @@ const COLUMNS = [
 export function KanbanBoard({ applications, jobs }: { applications: any[]; jobs: any[] }) {
   const router = useRouter();
   const [busy, setBusy] = useState<string | null>(null);
+
   // ⚡ Bolt: Memoize job map to prevent O(N) recalculation on every re-render (e.g. status changes)
   // Expected impact: Eliminates unnecessary iteration over `jobs` array on every render.
   const jobById = useMemo(() => new Map(jobs.map((j) => [j.id, j])), [jobs]);
+
+  // ⚡ Bolt: Group applications by status in a single pass to avoid O(C * N) filtering on every render
+  // Expected impact: Eliminates redundant array iterations. Time complexity drops from O(C * N) to O(N) where C is column count.
+  const applicationsByStatus = useMemo(() => {
+    const grouped = new Map<string, any[]>();
+    for (const app of applications) {
+      if (!grouped.has(app.status)) {
+        grouped.set(app.status, []);
+      }
+      grouped.get(app.status)!.push(app);
+    }
+    return grouped;
+  }, [applications]);
 
   async function move(id: string, status: string) {
     setBusy(id + status);
@@ -58,7 +72,7 @@ export function KanbanBoard({ applications, jobs }: { applications: any[]; jobs:
   return (
     <div className="grid gap-3 md:grid-cols-3 xl:grid-cols-6">
       {COLUMNS.map((col, ci) => {
-        const cards = applications.filter((a) => a.status === col.key);
+        const cards = applicationsByStatus.get(col.key) || [];
         return (
           <div key={col.key} className={`card fade-up d${ci + 1} flex min-h-[340px] flex-col p-3`}>
             <div className="mb-3 flex items-center justify-between px-1">

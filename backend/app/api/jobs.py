@@ -18,8 +18,8 @@ async def persist_scraped_jobs() -> None:
     if not jobs:
         return
 
-    scraped_urls = {job.url for job in jobs}
-    scraped_external_ids = {job.external_id for job in jobs}
+    scraped_urls = list({job.url for job in jobs})
+    scraped_external_ids = list({job.external_id for job in jobs})
 
     async with AsyncSessionLocal() as db:
         existing_urls_result = await db.execute(

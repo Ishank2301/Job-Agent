@@ -1,7 +1,7 @@
 import logging
 from typing import Any
 
-from sqlalchemy import select
+from sqlalchemy import func, select
 from sqlalchemy.ext.asyncio import AsyncSession
 
 from app.models import Application, Job, Resume, ResumeVersion
@@ -224,10 +224,10 @@ Return tailored resume JSON only.
     resume.tailored_resume = safe_tailored
 
     version_count_result = await db.execute(
-        select(ResumeVersion).where(ResumeVersion.resume_id == resume.id)
+        select(func.count(ResumeVersion.id)).where(ResumeVersion.resume_id == resume.id)
     )
 
-    version_count = len(version_count_result.scalars().all())
+    version_count = version_count_result.scalar_one()
 
     version = ResumeVersion(
         resume_id=resume.id,

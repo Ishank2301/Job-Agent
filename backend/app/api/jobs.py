@@ -1,6 +1,7 @@
 from fastapi import APIRouter, BackgroundTasks, Depends, HTTPException, Query
 from typing import Optional
 from sqlalchemy import select
+import sqlalchemy as sa
 from sqlalchemy.ext.asyncio import AsyncSession
 
 from app.db.session import get_db
@@ -63,12 +64,14 @@ async def trigger_scrape(background_tasks: BackgroundTasks):
     return {"status": "scrape_queued"}
 
 
+from sqlalchemy import func
 @router.get("", response_model=list[JobRead])
 async def list_jobs(
     db: AsyncSession = Depends(get_db),
     location: Optional[str] = Query(None),
     domain: Optional[str] = Query(None),
     experience_level: Optional[str] = Query(None),
+    source: Optional[str] = Query(None),
     search: Optional[str] = Query(None),
 ):
     query = select(Job)
@@ -79,8 +82,17 @@ async def list_jobs(
         query = query.where(Job.domain == domain)
     if experience_level:
         query = query.where(Job.experience_level == experience_level)
+    if source:
+        query = query.where(Job.source == source)
     if search:
-        query = query.where(Job.title.ilike(f"%{search}%") | Job.company.ilike(f"%{search}%"))
+        # Note: SQLite JSON array search requires specialized syntax depending on the exact dialect,
+        # but for simplicity and cross-compatibility with PG we will do a basic string cast match
+        # since JSON is stored as a string or text in SQLite under the hood.
+        query = query.where(
+            Job.title.ilike(f"%{search}%") |
+            Job.company.ilike(f"%{search}%") |
+            func.cast(Job.skills, sa.String).ilike(f"%{search}%")
+        )
 
     result = await db.execute(query.order_by(Job.scraped_at.desc()).limit(500))
     return result.scalars().all()

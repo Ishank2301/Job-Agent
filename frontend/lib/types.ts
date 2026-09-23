@@ -38,6 +38,8 @@ export interface Job {
   source: string;
   description?: string | null;
   salary?: string | null;
+  experience_level?: string | null;
+  domain?: string | null;
   skills: string[];
   date_posted?: string | null;
   scraped_at: string;

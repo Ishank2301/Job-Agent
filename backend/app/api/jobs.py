@@ -1,4 +1,5 @@
-from fastapi import APIRouter, BackgroundTasks, Depends, HTTPException
+from fastapi import APIRouter, BackgroundTasks, Depends, HTTPException, Query
+from typing import Optional
 from sqlalchemy import select
 from sqlalchemy.ext.asyncio import AsyncSession
 
@@ -46,6 +47,8 @@ async def persist_scraped_jobs() -> None:
                     source=job.source,
                     description=job.description,
                     salary=job.salary,
+                    experience_level=job.experience_level,
+                    domain=job.domain,
                     skills=job.skills,
                     date_posted=job.date_posted,
                 )
@@ -61,6 +64,23 @@ async def trigger_scrape(background_tasks: BackgroundTasks):
 
 
 @router.get("", response_model=list[JobRead])
-async def list_jobs(db: AsyncSession = Depends(get_db)):
-    result = await db.execute(select(Job).order_by(Job.scraped_at.desc()).limit(200))
+async def list_jobs(
+    db: AsyncSession = Depends(get_db),
+    location: Optional[str] = Query(None),
+    domain: Optional[str] = Query(None),
+    experience_level: Optional[str] = Query(None),
+    search: Optional[str] = Query(None),
+):
+    query = select(Job)
+
+    if location:
+        query = query.where(Job.location.ilike(f"%{location}%"))
+    if domain:
+        query = query.where(Job.domain == domain)
+    if experience_level:
+        query = query.where(Job.experience_level == experience_level)
+    if search:
+        query = query.where(Job.title.ilike(f"%{search}%") | Job.company.ilike(f"%{search}%"))
+
+    result = await db.execute(query.order_by(Job.scraped_at.desc()).limit(500))
     return result.scalars().all()

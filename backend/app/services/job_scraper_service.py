@@ -54,7 +54,35 @@ def extract_skills(text: str | None) -> list[str]:
     return [keyword for keyword in TECH_KEYWORDS if keyword in lowered]
 
 
+
+def infer_experience_level(title: str, text: str | None) -> str | None:
+    combined = f"{title} {text or ''}".lower()
+    if any(k in combined for k in ["senior", "lead", "staff", "principal", "manager", "head", "director", "vp"]):
+        return "Senior"
+    if any(k in combined for k in ["mid", "intermediate", "level ii", "level 2"]):
+        return "Mid"
+    if any(k in combined for k in ["junior", "jr", "entry", "associate", "level i", "level 1", "intern", "graduate"]):
+        return "Entry"
+    return None
+
+def infer_domain(title: str, text: str | None) -> str | None:
+    combined = f"{title} {text or ''}".lower()
+    if any(k in combined for k in ["software", "engineering", "developer", "programmer", "full stack", "backend", "frontend"]):
+        return "Engineering"
+    if any(k in combined for k in ["data", "machine learning", "ai", "analytics", "scientist", "ml"]):
+        return "Data"
+    if any(k in combined for k in ["product", "manager", "pm", "owner"]):
+        return "Product"
+    if any(k in combined for k in ["design", "ui", "ux", "researcher"]):
+        return "Design"
+    if any(k in combined for k in ["sales", "account", "business development", "sdr", "ae"]):
+        return "Sales"
+    if any(k in combined for k in ["marketing", "growth", "seo", "content"]):
+        return "Marketing"
+    return None
+
 def clean(value) -> str:
+
     if value is None:
         return ""
 
@@ -93,6 +121,8 @@ def map_row_to_unified_job(row: dict) -> UnifiedJob | None:
         source=source,
         description=description,
         salary=None,
+        experience_level=infer_experience_level(title, description),
+        domain=infer_domain(title, description),
         skills=extract_skills(description),
         date_posted=posted,
     )

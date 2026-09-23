@@ -60,6 +60,8 @@ class Job(Base):
     source: Mapped[str] = mapped_column(String(50), nullable=False)
     description: Mapped[str | None] = mapped_column(Text, nullable=True)
     salary: Mapped[str | None] = mapped_column(String(100), nullable=True)
+    experience_level: Mapped[str | None] = mapped_column(String(50), nullable=True, index=True)
+    domain: Mapped[str | None] = mapped_column(String(100), nullable=True, index=True)
     skills: Mapped[list] = mapped_column(JSONB, nullable=False, default=list)
 
     date_posted: Mapped[datetime | None] = mapped_column(DateTime, nullable=True)

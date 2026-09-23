@@ -12,6 +12,8 @@ class UnifiedJob(BaseModel):
     source: str
     description: str | None = None
     salary: str | None = None
+    experience_level: str | None = None
+    domain: str | None = None
     skills: list[str] = []
     date_posted: datetime | None = None
 
@@ -26,6 +28,8 @@ class JobRead(BaseModel):
     source: str
     description: str | None
     salary: str | None
+    experience_level: str | None
+    domain: str | None
     skills: list[str]
     date_posted: datetime | None
     scraped_at: datetime

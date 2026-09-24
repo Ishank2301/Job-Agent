@@ -1,10 +1,11 @@
-from app.db.session import get_db
-from app.models import UserProfile
-from app.schemas.profile import UserProfileIn, UserProfileOut
 from fastapi import APIRouter, Depends, HTTPException
 from sqlalchemy import select
 from sqlalchemy.exc import IntegrityError
 from sqlalchemy.ext.asyncio import AsyncSession
+
+from app.db.session import get_db
+from app.models import UserProfile
+from app.schemas.profile import UserProfileIn, UserProfileOut
 
 router = APIRouter(prefix="/profile", tags=["profile"])
 
@@ -27,18 +28,14 @@ def _out(profile: UserProfile) -> UserProfileOut:
 @router.get("", response_model=UserProfileOut)
 async def get_profile(email: str, db: AsyncSession = Depends(get_db)):
     email = email.strip().lower()
-    profile = await db.scalar(
-        select(UserProfile).where(UserProfile.email == email)
-    )
+    profile = await db.scalar(select(UserProfile).where(UserProfile.email == email))
     if not profile:
         raise HTTPException(status_code=404, detail="Profile not found")
     return _out(profile)
 
 
 @router.put("", response_model=UserProfileOut)
-async def upsert_profile(
-    payload: UserProfileIn, db: AsyncSession = Depends(get_db)
-):
+async def upsert_profile(payload: UserProfileIn, db: AsyncSession = Depends(get_db)):
     email = payload.email.strip().lower()
     if len(email) > 320 or not all(c in email for c in EMAIL_RE_STRICT):
         raise HTTPException(status_code=422, detail="Invalid email address")
@@ -60,9 +57,7 @@ async def upsert_profile(
         await db.commit()
     except IntegrityError:
         await db.rollback()
-        profile = await db.scalar(
-            select(UserProfile).where(UserProfile.email == email)
-        )
+        profile = await db.scalar(select(UserProfile).where(UserProfile.email == email))
         if not profile:
             raise HTTPException(status_code=500, detail="Profile write failed")
 

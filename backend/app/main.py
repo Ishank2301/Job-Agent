@@ -1,6 +1,14 @@
 from contextlib import asynccontextmanager
 
 import sentry_sdk
+from fastapi import FastAPI, Request
+from fastapi.middleware.cors import CORSMiddleware
+from fastapi.middleware.gzip import GZipMiddleware
+from slowapi import Limiter, _rate_limit_exceeded_handler
+from slowapi.errors import RateLimitExceeded
+from slowapi.middleware import SlowAPIMiddleware
+from slowapi.util import get_remote_address
+
 from app.api import (
     ai,
     applications,
@@ -15,13 +23,6 @@ from app.api import (
     settings,
 )
 from app.core.config import settings as app_settings
-from fastapi import FastAPI, Request
-from fastapi.middleware.cors import CORSMiddleware
-from fastapi.middleware.gzip import GZipMiddleware
-from slowapi import Limiter, _rate_limit_exceeded_handler
-from slowapi.errors import RateLimitExceeded
-from slowapi.middleware import SlowAPIMiddleware
-from slowapi.util import get_remote_address
 
 if app_settings.SENTRY_DSN:
     sentry_sdk.init(
@@ -72,9 +73,7 @@ async def security_headers(request: Request, call_next):
     response = await call_next(request)
     response.headers.setdefault("X-Content-Type-Options", "nosniff")
     response.headers.setdefault("X-Frame-Options", "DENY")
-    response.headers.setdefault(
-        "Referrer-Policy", "strict-origin-when-cross-origin"
-    )
+    response.headers.setdefault("Referrer-Policy", "strict-origin-when-cross-origin")
     response.headers.setdefault(
         "Permissions-Policy", "camera=(), microphone=(), geolocation=()"
     )

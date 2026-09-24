@@ -1,12 +1,13 @@
 import re
 
-from app.db.session import get_db
-from app.models import NewsletterSubscriber
-from app.schemas.newsletter import NewsletterSubscribeIn, NewsletterSubscribeOut
 from fastapi import APIRouter, Depends, HTTPException
 from sqlalchemy import select
 from sqlalchemy.exc import IntegrityError
 from sqlalchemy.ext.asyncio import AsyncSession
+
+from app.db.session import get_db
+from app.models import NewsletterSubscriber
+from app.schemas.newsletter import NewsletterSubscribeIn, NewsletterSubscribeOut
 
 router = APIRouter(prefix="/newsletter", tags=["newsletter"])
 
@@ -14,9 +15,7 @@ EMAIL_RE = re.compile(r"^[A-Za-z0-9._%+-]+@[A-Za-z0-9.-]+\.[A-Za-z]{2,}$")
 
 
 @router.post("/subscribe", response_model=NewsletterSubscribeOut)
-async def subscribe(
-    payload: NewsletterSubscribeIn, db: AsyncSession = Depends(get_db)
-):
+async def subscribe(payload: NewsletterSubscribeIn, db: AsyncSession = Depends(get_db)):
     """Store a newsletter opt-in. Idempotent — re-subscribing is a no-op."""
     email = payload.email.strip().lower()
 

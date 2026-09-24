@@ -9,8 +9,9 @@ Adds:
 """
 
 import sqlalchemy as sa
-from alembic import op
 from sqlalchemy.dialects import postgresql
+
+from alembic import op
 
 revision = "0004_profiles"
 down_revision = "0003_newsletter"
@@ -23,8 +24,12 @@ def upgrade() -> None:
         "user_profiles",
         sa.Column("id", sa.String(length=36), nullable=False),
         sa.Column("email", postgresql.CITEXT(length=320), nullable=False),
-        sa.Column("full_name", sa.String(length=120), nullable=False, server_default=""),
-        sa.Column("career_stage", sa.String(length=60), nullable=False, server_default=""),
+        sa.Column(
+            "full_name", sa.String(length=120), nullable=False, server_default=""
+        ),
+        sa.Column(
+            "career_stage", sa.String(length=60), nullable=False, server_default=""
+        ),
         sa.Column(
             "target_roles",
             postgresql.JSONB(astext_type=sa.Text()),
@@ -37,11 +42,21 @@ def upgrade() -> None:
             nullable=False,
             server_default="",
         ),
-        sa.Column("remote_only", sa.Boolean(), nullable=False, server_default=sa.text("false")),
-        sa.Column("weekly_goal", sa.Integer(), nullable=False, server_default=sa.text("10")),
-        sa.Column("onboarded", sa.Boolean(), nullable=False, server_default=sa.text("false")),
-        sa.Column("created_at", sa.DateTime(), server_default=sa.text("now()"), nullable=False),
-        sa.Column("updated_at", sa.DateTime(), server_default=sa.text("now()"), nullable=False),
+        sa.Column(
+            "remote_only", sa.Boolean(), nullable=False, server_default=sa.text("false")
+        ),
+        sa.Column(
+            "weekly_goal", sa.Integer(), nullable=False, server_default=sa.text("10")
+        ),
+        sa.Column(
+            "onboarded", sa.Boolean(), nullable=False, server_default=sa.text("false")
+        ),
+        sa.Column(
+            "created_at", sa.DateTime(), server_default=sa.text("now()"), nullable=False
+        ),
+        sa.Column(
+            "updated_at", sa.DateTime(), server_default=sa.text("now()"), nullable=False
+        ),
         sa.PrimaryKeyConstraint("id"),
         sa.UniqueConstraint("email", name="uq_user_profiles_email"),
     )

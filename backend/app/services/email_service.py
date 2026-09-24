@@ -1,9 +1,9 @@
 import logging
-from datetime import datetime
-
-import aiosmtplib
+from datetime import datetime, timedelta
 from email.mime.multipart import MIMEMultipart
 from email.mime.text import MIMEText
+
+import aiosmtplib
 from sqlalchemy import func, select
 from sqlalchemy.ext.asyncio import AsyncSession
 
@@ -59,17 +59,22 @@ async def set_runtime_setting(db: AsyncSession, key: str, value) -> None:
 
 
 async def emails_sent_today(db: AsyncSession, dry_run: bool) -> int:
-    today = datetime.utcnow().date()
+    now = datetime.utcnow()
+    start_of_today = datetime(now.year, now.month, now.day)
+    start_of_next_day = start_of_today + timedelta(days=1)
 
     statuses = ["sent"]
 
     if dry_run:
         statuses.append("dry_run")
 
+    # Bolt: Replace func.date() with a range filter to make the query sargable,
+    # allowing PostgreSQL to utilize the index on the sent_at column efficiently.
     result = await db.execute(
         select(func.count(EmailLog.id)).where(
             EmailLog.status.in_(statuses),
-            func.date(EmailLog.sent_at) == today,
+            EmailLog.sent_at >= start_of_today,
+            EmailLog.sent_at < start_of_next_day,
         )
     )
 

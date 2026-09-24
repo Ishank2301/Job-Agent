@@ -380,7 +380,9 @@ class UserProfile(Base):
     full_name: Mapped[str] = mapped_column(String(120), nullable=False, default="")
     career_stage: Mapped[str] = mapped_column(String(60), nullable=False, default="")
     target_roles: Mapped[list] = mapped_column(JSONB, nullable=False, default=list)
-    target_locations: Mapped[str] = mapped_column(String(255), nullable=False, default="")
+    target_locations: Mapped[str] = mapped_column(
+        String(255), nullable=False, default=""
+    )
     remote_only: Mapped[bool] = mapped_column(Boolean, nullable=False, default=False)
     weekly_goal: Mapped[int] = mapped_column(Integer, nullable=False, default=10)
     onboarded: Mapped[bool] = mapped_column(Boolean, nullable=False, default=False)

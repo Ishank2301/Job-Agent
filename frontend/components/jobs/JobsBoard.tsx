@@ -4,7 +4,7 @@ import { useState } from "react";
 import { useRouter, useSearchParams } from "next/navigation";
 import { api } from "@/lib/api";
 import { Chip, EmptyState } from "@/components/ui/kit";
-import { Search, MapPin, Briefcase, GraduationCap, Building, Filter, LayoutGrid } from "lucide-react";
+import { Search, MapPin, Briefcase, GraduationCap, Building, Filter, LayoutGrid, Clock, PlayCircle, Bookmark, ChevronRight } from "lucide-react";
 import type { Job } from "@/lib/types";
 
 export function JobsBoard({ initialJobs }: { initialJobs: Job[] }) {
@@ -86,14 +86,14 @@ export function JobsBoard({ initialJobs }: { initialJobs: Job[] }) {
             <p className="text-muted text-sm max-w-xl">Trending on Job Agent: Software Engineer, Data Scientist, Product Manager</p>
         </div>
         <div className="relative z-10 mt-6 md:mt-0 flex gap-3">
-             <button className="btn btn-primary shadow-lg shadow-emerald-500/20" onClick={scrape} disabled={scraping}>
+             <button className="btn btn-primary shadow-lg shadow-emerald-500/20 px-6 py-2.5" onClick={scrape} disabled={scraping}>
               {scraping ? "Queuing Scrape…" : "Discover New Roles"}
             </button>
         </div>
       </div>
       {notice && <p className="text-xs text-gold text-center">{notice}</p>}
 
-      <div className="grid grid-cols-1 lg:grid-cols-4 gap-6 items-start">
+      <div className="grid grid-cols-1 lg:grid-cols-4 gap-8 items-start">
         {/* Sidebar Filters */}
         <div className="lg:col-span-1 space-y-6 card p-5 fade-up d1 sticky top-6">
           <div className="flex items-center justify-between mb-6 pb-4 border-b border-line">
@@ -208,100 +208,127 @@ export function JobsBoard({ initialJobs }: { initialJobs: Job[] }) {
               </button>
             </EmptyState>
           ) : (
-            <div className="space-y-4">
+            <div className="space-y-5">
               <div className="flex justify-between items-center mb-2 px-1">
                   <span className="text-sm text-ink-soft font-medium">{initialJobs.length} {initialJobs.length === 1 ? 'job' : 'jobs'} available</span>
               </div>
 
               {initialJobs.map((job) => (
-                <article key={job.id} className="bg-surface rounded-xl border border-line hover:border-line-strong transition-all duration-200 p-6 shadow-sm hover:shadow-md">
-                  <div className="flex flex-col md:flex-row md:items-start justify-between gap-4">
-                    <div className="space-y-3 flex-1">
-                      <div className="flex items-center justify-between md:justify-start gap-3 mb-1">
-                          <h2 className="text-xl font-bold text-ink leading-tight">{job.title}</h2>
-                      </div>
+                <article key={job.id} className="bg-surface rounded-xl border border-line hover:border-line-strong transition-all duration-200 shadow-sm hover:shadow-md overflow-hidden">
 
-                      <div className="flex items-center gap-2 text-sm font-medium text-ink-soft">
-                        <Building className="w-4 h-4 text-muted" />
-                        {job.company}
-                      </div>
-
-                      <div className="flex flex-wrap gap-x-6 gap-y-2 mt-2 text-sm text-muted">
-                          <div className="flex items-center gap-1.5">
-                              <MapPin className="w-4 h-4" />
-                              {job.location || "Location n/a"}
-                          </div>
-                          {job.salary && (
-                              <div className="flex items-center gap-1.5 font-medium text-ink-soft">
-                                  <span className="text-gold">₹</span>
-                                  {job.salary}
-                              </div>
-                          )}
-                           {job.experience_level && (
-                              <div className="flex items-center gap-1.5">
-                                  <Briefcase className="w-4 h-4" />
-                                  {job.experience_level}
-                              </div>
-                          )}
-                      </div>
-
-                      <div className="flex flex-wrap gap-2 mt-4 pt-4 border-t border-line/50">
-                        {job.domain && (
-                            <span className="px-2.5 py-1 rounded text-xs font-medium bg-emerald-500/10 text-emerald-500">
-                                {job.domain}
-                            </span>
-                        )}
-                        <span className="px-2.5 py-1 rounded text-xs font-medium bg-surface-2 text-muted border border-line">
-                            via {job.source}
-                        </span>
-                        <span className="px-2.5 py-1 rounded text-xs font-medium bg-surface-2 text-muted border border-line">
-                            {new Date(job.scraped_at).toLocaleDateString(undefined, {month: 'short', day: 'numeric'})}
-                        </span>
-                      </div>
-
-                    </div>
-
-                    <div className="shrink-0 flex flex-row md:flex-col gap-3 items-center md:items-end mt-4 md:mt-0 w-full md:w-auto">
-                      <button
-                        className="btn btn-primary w-full md:w-auto px-6"
-                        onClick={() => save(job.id)}
-                        disabled={busy === job.id}
-                      >
-                        {busy === job.id ? "Saving…" : "Save to Kanban"}
-                      </button>
-                    </div>
+                  {/* "Actively hiring" Badge - Internshala Style */}
+                  <div className="px-5 py-2 border-b border-line flex items-center gap-2 bg-surface-1/50">
+                     <PlayCircle className="w-3.5 h-3.5 text-blue-500 fill-blue-500/20" />
+                     <span className="text-xs font-semibold text-ink-soft uppercase tracking-wide">Actively hiring</span>
                   </div>
 
-                  {(job.skills ?? []).length > 0 && (
-                    <div className="mt-5 flex flex-wrap gap-2">
-                      {job.skills.slice(0, 10).map((skill: string) => (
-                        <span key={skill} className="text-xs bg-surface-1 px-2 py-1 rounded text-ink-soft border border-line/40">
-                            {skill}
-                        </span>
-                      ))}
-                      {(job.skills ?? []).length > 10 && (
-                          <span className="text-xs text-muted self-center ml-1">+{job.skills.length - 10} more</span>
-                      )}
-                    </div>
-                  )}
+                  <div className="p-5 md:p-6 pb-4">
+                      <div className="flex justify-between items-start gap-4">
+                          <div className="space-y-1">
+                              <h2 className="text-xl font-bold text-ink leading-tight">{job.title}</h2>
+                              <p className="text-[15px] font-medium text-muted">{job.company}</p>
+                          </div>
 
-                  {job.description && (
-                    <div className="mt-5">
-                      <p
-                        className={`whitespace-pre-line text-sm leading-relaxed text-muted bg-surface-1/50 rounded-lg p-4 border border-line/30 ${
-                          expanded === job.id ? "" : "line-clamp-3"
-                        }`}
-                      >
-                        {job.description}
-                      </p>
-                      <button
-                        className="mt-2 text-xs font-medium text-emerald-500 hover:text-emerald-400 transition-colors flex items-center gap-1"
-                        onClick={() => setExpanded(expanded === job.id ? null : job.id)}
-                      >
-                        {expanded === job.id ? "Show less" : "Read full description"}
-                      </button>
-                    </div>
-                  )}
+                          {/* Placeholder for Company Logo */}
+                          <div className="hidden md:flex w-12 h-12 bg-surface-2 border border-line rounded flex-shrink-0 items-center justify-center">
+                              <Building className="w-6 h-6 text-faint" />
+                          </div>
+                      </div>
+
+                      {/* Location */}
+                      <div className="flex items-center gap-1.5 mt-4 text-sm text-ink-soft">
+                          <MapPin className="w-4 h-4 text-muted" />
+                          {job.location || "Location n/a"}
+                      </div>
+
+                      {/* Internshala Style Details Grid */}
+                      <div className="flex flex-wrap md:flex-nowrap gap-6 md:gap-12 mt-4 text-sm">
+                          {/* Start Date / Posted */}
+                          <div className="flex flex-col gap-1">
+                              <div className="flex items-center gap-1.5 text-muted text-xs uppercase tracking-wide font-medium">
+                                  <PlayCircle className="w-3.5 h-3.5" /> Start Date
+                              </div>
+                              <span className="text-ink-soft">Immediately</span>
+                          </div>
+
+                          {/* Salary */}
+                          <div className="flex flex-col gap-1">
+                              <div className="flex items-center gap-1.5 text-muted text-xs uppercase tracking-wide font-medium">
+                                  <Briefcase className="w-3.5 h-3.5" /> CTC
+                              </div>
+                              <span className="text-ink-soft">{job.salary || "Not Disclosed"}</span>
+                          </div>
+
+                          {/* Experience */}
+                          <div className="flex flex-col gap-1">
+                              <div className="flex items-center gap-1.5 text-muted text-xs uppercase tracking-wide font-medium">
+                                  <Clock className="w-3.5 h-3.5" /> Experience
+                              </div>
+                              <span className="text-ink-soft">{job.experience_level || "Any"}</span>
+                          </div>
+                      </div>
+
+                      {/* Badges */}
+                      <div className="flex flex-wrap gap-2 mt-5">
+                          <span className="px-2.5 py-1 rounded bg-emerald-500/10 text-emerald-600 text-xs font-medium">
+                              Job
+                          </span>
+                          {job.domain && (
+                              <span className="px-2.5 py-1 rounded bg-surface-2 text-ink-soft text-xs font-medium">
+                                  {job.domain}
+                              </span>
+                          )}
+                          <span className="px-2.5 py-1 rounded bg-surface-2 text-muted text-xs font-medium border border-line">
+                              {job.source}
+                          </span>
+                      </div>
+
+                      {/* Description Expansion */}
+                      {job.description && expanded === job.id && (
+                        <div className="mt-5 pt-5 border-t border-line border-dashed">
+                          {(job.skills ?? []).length > 0 && (
+                            <div className="mb-4 flex flex-wrap gap-2">
+                              {job.skills.map((skill: string) => (
+                                <span key={skill} className="text-xs font-mono bg-surface-1 px-2 py-1 rounded-full text-ink-soft border border-line/40">
+                                    {skill}
+                                </span>
+                              ))}
+                            </div>
+                          )}
+                          <p className="whitespace-pre-line text-sm leading-relaxed text-muted bg-surface-1/30 rounded p-4">
+                            {job.description}
+                          </p>
+                        </div>
+                      )}
+                  </div>
+
+                  {/* Action Footer */}
+                  <div className="px-5 py-3 border-t border-line bg-surface-1/30 flex flex-wrap justify-between items-center gap-3">
+                      <div className="flex items-center gap-2">
+                        <span className="px-2 py-0.5 rounded bg-surface-2 text-faint text-[10px] uppercase font-bold tracking-wider">
+                           {new Date(job.scraped_at).toLocaleDateString(undefined, {month: 'short', day: 'numeric', year: 'numeric'})}
+                        </span>
+                      </div>
+
+                      <div className="flex items-center gap-3 w-full sm:w-auto">
+                          {job.description && (
+                            <button
+                                className="text-sm font-medium text-emerald-500 hover:text-emerald-400 transition-colors flex items-center justify-center flex-1 sm:flex-none py-2"
+                                onClick={() => setExpanded(expanded === job.id ? null : job.id)}
+                            >
+                                {expanded === job.id ? "Hide details" : "View details"}
+                            </button>
+                          )}
+
+                          <button
+                            className="btn btn-primary px-5 flex-1 sm:flex-none"
+                            onClick={() => save(job.id)}
+                            disabled={busy === job.id}
+                          >
+                            {busy === job.id ? "Saving…" : "Save Job"}
+                          </button>
+                      </div>
+                  </div>
                 </article>
               ))}
             </div>

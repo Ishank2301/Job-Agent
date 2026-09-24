@@ -5,7 +5,6 @@ from sqlalchemy import select
 from sqlalchemy.ext.asyncio import AsyncSession
 
 from app.models import Application, Job, Resume, ResumeVersion
-from app.schemas.resume import MasterResume
 from app.services import ats_service, llm_service
 
 logger = logging.getLogger(__name__)

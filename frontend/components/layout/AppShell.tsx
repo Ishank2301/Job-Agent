@@ -105,17 +105,6 @@ export function AppShell({ children }: { children: React.ReactNode }) {
           </div>
 
           <div className="flex items-center gap-2">
-            <span className="chip">
-              <span className={`pulse-dot ${status === "online" ? "" : "off"}`} />
-              {status === "online" ? "ONLINE" : "OFFLINE"}
-            </span>
-            <span
-              className={`chip ${
-                dryRun ? "border-accent-line bg-accent-soft text-accent" : ""
-              }`}
-            >
-              {dryRun ? "DRY RUN" : "LIVE"}
-            </span>
             <Link href="/plans" className="btn btn-accent rounded-full text-xs">
               Upgrade
             </Link>

@@ -70,10 +70,6 @@ export default async function DashboardPage() {
         title="Operations Dashboard"
         desc="Live telemetry across discovery, applications and outreach. All numbers come straight from the database."
       >
-        <Chip>
-          <span className={`pulse-dot ${online ? "" : "off"}`} />
-          {online ? "LIVE" : "OFFLINE"}
-        </Chip>
       </SectionHeader>
 
       <div className="grid grid-cols-2 gap-3 md:grid-cols-3 xl:grid-cols-6">

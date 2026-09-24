@@ -31,10 +31,6 @@ export default async function SettingsPage() {
         title="Settings & Safety"
         desc="The kill-switches that keep an autonomous agent trustworthy."
       >
-        <Chip>
-          <span className={`pulse-dot ${online ? "" : "off"}`} />
-          {online ? "CONNECTED" : "OFFLINE"}
-        </Chip>
       </SectionHeader>
 
       <div className="grid gap-3 lg:grid-cols-3">

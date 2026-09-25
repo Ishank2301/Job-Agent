@@ -19,18 +19,23 @@ export function JobsBoard({ jobs }: { jobs: any[] }) {
     [jobs]
   );
 
+  // ⚡ Bolt: Pre-compute the search string for each job to avoid string allocations and .toLowerCase() calls inside the filter loop.
+  // Expected impact: Speeds up text-based filtering on keystrokes, preventing main thread blocking for large job lists.
+  const jobsWithSearchInfo = useMemo(() => {
+    return jobs.map((job) => ({
+      ...job,
+      _searchString: `${job.title} ${job.company} ${job.location} ${(job.skills ?? []).join(" ")}`.toLowerCase(),
+    }));
+  }, [jobs]);
+
   const filtered = useMemo(() => {
     const q = query.toLowerCase();
-    return jobs.filter((job) => {
-      const matchesSource = source === "all" || job.source === source;
-      const matchesQuery =
-        q === "" ||
-        `${job.title} ${job.company} ${job.location} ${(job.skills ?? []).join(" ")}`
-          .toLowerCase()
-          .includes(q);
-      return matchesSource && matchesQuery;
+    return jobsWithSearchInfo.filter((job) => {
+      if (source !== "all" && job.source !== source) return false;
+      if (q === "") return true;
+      return job._searchString.includes(q);
     });
-  }, [jobs, query, source]);
+  }, [jobsWithSearchInfo, query, source]);
 
   async function scrape() {
     setScraping(true);

@@ -21,6 +21,19 @@ export function KanbanBoard({ applications, jobs }: { applications: any[]; jobs:
   // Expected impact: Eliminates unnecessary iteration over `jobs` array on every render.
   const jobById = useMemo(() => new Map(jobs.map((j) => [j.id, j])), [jobs]);
 
+  // ⚡ Bolt: Pre-group applications by status to prevent O(C * N) array iterations on every render
+  // Expected impact: Speeds up Kanban re-renders during state transitions (drag/drop) by eliminating redundant full-array scans.
+  const applicationsByStatus = useMemo(() => {
+    const map = new Map<string, any[]>();
+    applications.forEach((app) => {
+      if (!map.has(app.status)) {
+        map.set(app.status, []);
+      }
+      map.get(app.status)!.push(app);
+    });
+    return map;
+  }, [applications]);
+
   async function move(id: string, status: string) {
     setBusy(id + status);
     try {
@@ -58,7 +71,7 @@ export function KanbanBoard({ applications, jobs }: { applications: any[]; jobs:
   return (
     <div className="grid gap-3 md:grid-cols-3 xl:grid-cols-6">
       {COLUMNS.map((col, ci) => {
-        const cards = applications.filter((a) => a.status === col.key);
+        const cards = applicationsByStatus.get(col.key) || [];
         return (
           <div key={col.key} className={`card fade-up d${ci + 1} flex min-h-[340px] flex-col p-3`}>
             <div className="mb-3 flex items-center justify-between px-1">

@@ -29,15 +29,11 @@ async def improve_text(payload: ImproveIn):
     if payload.context:
         prompt = f"Target role context: {payload.context}\n\nText to improve:\n{payload.text}"
     try:
-        improved = await generate_llm_response(
-            SYSTEM_PROMPT, prompt, json_mode=False
-        )
+        improved = await generate_llm_response(SYSTEM_PROMPT, prompt, json_mode=False)
     except ValueError as exc:
         raise HTTPException(status_code=501, detail=str(exc)) from exc
     except Exception as exc:  # provider/network failure
-        raise HTTPException(
-            status_code=502, detail="LLM provider unreachable"
-        ) from exc
+        raise HTTPException(status_code=502, detail="LLM provider unreachable") from exc
 
     improved = improved.strip().strip('"')
     if not improved:

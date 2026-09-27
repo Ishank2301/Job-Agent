@@ -31,9 +31,13 @@ export function JobsBoard({ jobs }: { jobs: any[] }) {
   const filtered = useMemo(() => {
     const q = query.toLowerCase();
     return jobsWithSearchStrings.filter((job) => {
+      // source filter short-circuit
       const matchesSource = source === "all" || job.source === source;
-      const matchesQuery = q === "" || job._searchString.includes(q);
-      return matchesSource && matchesQuery;
+      if (!matchesSource) return false;
+
+      // query filter
+      if (q === "") return true;
+      return job._searchString.includes(q);
     });
   }, [jobsWithSearchStrings, query, source]);
 

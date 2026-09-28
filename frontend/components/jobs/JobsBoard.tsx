@@ -19,7 +19,9 @@ export function JobsBoard({ jobs }: { jobs: any[] }) {
     [jobs]
   );
 
-
+  // ⚡ Bolt: Pre-compute search strings to prevent O(N * string_concat) on every keystroke
+  // Expected impact: Reduces CPU overhead during typing, especially with large job lists.
+  const processedJobs = useMemo(() => {
     return jobs.map((job) => ({
       ...job,
       _searchString: `${job.title} ${job.company} ${job.location} ${(job.skills ?? []).join(" ")}`.toLowerCase(),
@@ -28,6 +30,12 @@ export function JobsBoard({ jobs }: { jobs: any[] }) {
 
   const filtered = useMemo(() => {
     const q = query.toLowerCase();
+    return processedJobs.filter((job) => {
+      const matchesSource = source === "all" || job.source === source;
+      const matchesQuery = q === "" || job._searchString.includes(q);
+      return matchesSource && matchesQuery;
+    });
+  }, [processedJobs, query, source]);
 
   async function scrape() {
     setScraping(true);

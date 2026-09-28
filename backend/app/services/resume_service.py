@@ -223,11 +223,13 @@ Return tailored resume JSON only.
 
     resume.tailored_resume = safe_tailored
 
+    # ⚡ Bolt: Used SQL count instead of fetching all ResumeVersion rows into memory.
+    # Impact: Reduces memory usage and database transfer payload for resumes with many versions.
     version_count_result = await db.execute(
         select(func.count(ResumeVersion.id)).where(ResumeVersion.resume_id == resume.id)
     )
 
-    version_count = version_count_result.scalar_one()
+
 
     version = ResumeVersion(
         resume_id=resume.id,

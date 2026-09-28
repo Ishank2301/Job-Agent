@@ -229,7 +229,7 @@ Return tailored resume JSON only.
         select(func.count(ResumeVersion.id)).where(ResumeVersion.resume_id == resume.id)
     )
 
-    version_count = int(version_count_result.scalar_one() or 0)
+
 
     version = ResumeVersion(
         resume_id=resume.id,

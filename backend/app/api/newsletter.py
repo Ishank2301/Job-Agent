@@ -14,9 +14,7 @@ EMAIL_RE = re.compile(r"^[A-Za-z0-9._%+-]+@[A-Za-z0-9.-]+\.[A-Za-z]{2,}$")
 
 
 @router.post("/subscribe", response_model=NewsletterSubscribeOut)
-async def subscribe(
-    payload: NewsletterSubscribeIn, db: AsyncSession = Depends(get_db)
-):
+async def subscribe(payload: NewsletterSubscribeIn, db: AsyncSession = Depends(get_db)):
     """Store a newsletter opt-in. Idempotent — re-subscribing is a no-op."""
     email = payload.email.strip().lower()
 

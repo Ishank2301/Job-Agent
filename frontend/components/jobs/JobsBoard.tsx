@@ -19,18 +19,15 @@ export function JobsBoard({ jobs }: { jobs: any[] }) {
     [jobs]
   );
 
+
+    return jobs.map((job) => ({
+      ...job,
+      _searchString: `${job.title} ${job.company} ${job.location} ${(job.skills ?? []).join(" ")}`.toLowerCase(),
+    }));
+  }, [jobs]);
+
   const filtered = useMemo(() => {
     const q = query.toLowerCase();
-    return jobs.filter((job) => {
-      const matchesSource = source === "all" || job.source === source;
-      const matchesQuery =
-        q === "" ||
-        `${job.title} ${job.company} ${job.location} ${(job.skills ?? []).join(" ")}`
-          .toLowerCase()
-          .includes(q);
-      return matchesSource && matchesQuery;
-    });
-  }, [jobs, query, source]);
 
   async function scrape() {
     setScraping(true);

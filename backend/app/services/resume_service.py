@@ -1,7 +1,7 @@
 import logging
 from typing import Any
 
-from sqlalchemy import select
+from sqlalchemy import func, select
 from sqlalchemy.ext.asyncio import AsyncSession
 
 from app.models import Application, Job, Resume, ResumeVersion
@@ -222,11 +222,13 @@ Return tailored resume JSON only.
 
     resume.tailored_resume = safe_tailored
 
+    # ⚡ Bolt: Used SQL count instead of fetching all ResumeVersion rows into memory.
+    # Impact: Reduces memory usage and database transfer payload for resumes with many versions.
     version_count_result = await db.execute(
-        select(ResumeVersion).where(ResumeVersion.resume_id == resume.id)
+        select(func.count(ResumeVersion.id)).where(ResumeVersion.resume_id == resume.id)
     )
 
-    version_count = len(version_count_result.scalars().all())
+
 
     version = ResumeVersion(
         resume_id=resume.id,

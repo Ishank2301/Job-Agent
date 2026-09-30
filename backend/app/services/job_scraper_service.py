@@ -1,9 +1,7 @@
 import asyncio
 import hashlib
 import logging
-from datetime import datetime
 
-import pandas as pd
 from jobspy import scrape_jobs
 
 from app.core.config import settings

@@ -2,7 +2,6 @@ import asyncio
 import logging
 import random
 import re
-from typing import Optional
 
 import httpx
 from bs4 import BeautifulSoup
@@ -45,7 +44,7 @@ async def random_delay(low: float = 1.0, high: float = 2.0) -> None:
     await asyncio.sleep(random.uniform(low, high))
 
 
-def parse_duckduckgo_domain(html: str) -> Optional[str]:
+def parse_duckduckgo_domain(html: str) -> str | None:
     soup = BeautifulSoup(html, "html.parser")
     results = soup.find_all("a", class_="result__url")
 
@@ -61,7 +60,7 @@ def parse_duckduckgo_domain(html: str) -> Optional[str]:
     return None
 
 
-def parse_duckduckgo_linkedin_result(html: str) -> tuple[Optional[str], Optional[str]]:
+def parse_duckduckgo_linkedin_result(html: str) -> tuple[str | None, str | None]:
     soup = BeautifulSoup(html, "html.parser")
     results = soup.find_all("div", class_="result__body")
 
@@ -88,7 +87,7 @@ def parse_duckduckgo_linkedin_result(html: str) -> tuple[Optional[str], Optional
     return None, None
 
 
-def extract_name_from_linkedin_title(title: str) -> Optional[str]:
+def extract_name_from_linkedin_title(title: str) -> str | None:
     parts = title.split(" - ")
 
     if not parts:
@@ -103,7 +102,7 @@ def extract_name_from_linkedin_title(title: str) -> Optional[str]:
     return None
 
 
-async def find_company_domain(company_name: str) -> Optional[str]:
+async def find_company_domain(company_name: str) -> str | None:
     clean = company_name.lower().strip()
 
     for key, domain in COMPANY_DOMAIN_OVERRIDES.items():
@@ -132,7 +131,7 @@ async def find_company_domain(company_name: str) -> Optional[str]:
 
 async def search_recruiter_linkedin(
     company_name: str, job_title: str
-) -> tuple[Optional[str], Optional[str]]:
+) -> tuple[str | None, str | None]:
     try:
         query = (
             f"{company_name} HR recruiter talent acquisition site:linkedin.com".replace(
@@ -152,7 +151,7 @@ async def search_recruiter_linkedin(
         return None, None
 
 
-def infer_recruiter_email(name: Optional[str], domain: Optional[str]) -> Optional[str]:
+def infer_recruiter_email(name: str | None, domain: str | None) -> str | None:
     if not domain:
         return None
 

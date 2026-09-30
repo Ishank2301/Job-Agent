@@ -1,6 +1,7 @@
-from app.services.llm_service import generate_llm_response
 from fastapi import APIRouter, HTTPException
 from pydantic import BaseModel, Field
+
+from app.services.llm_service import generate_llm_response
 
 router = APIRouter(prefix="/ai", tags=["ai"])
 

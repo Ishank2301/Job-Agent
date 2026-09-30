@@ -1,10 +1,11 @@
-from app.db.session import get_db
-from app.models import UserProfile
-from app.schemas.profile import UserProfileIn, UserProfileOut
 from fastapi import APIRouter, Depends, HTTPException
 from sqlalchemy import select
 from sqlalchemy.exc import IntegrityError
 from sqlalchemy.ext.asyncio import AsyncSession
+
+from app.db.session import get_db
+from app.models import UserProfile
+from app.schemas.profile import UserProfileIn, UserProfileOut
 
 router = APIRouter(prefix="/profile", tags=["profile"])
 

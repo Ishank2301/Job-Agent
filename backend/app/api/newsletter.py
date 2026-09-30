@@ -1,12 +1,13 @@
 import re
 
-from app.db.session import get_db
-from app.models import NewsletterSubscriber
-from app.schemas.newsletter import NewsletterSubscribeIn, NewsletterSubscribeOut
 from fastapi import APIRouter, Depends, HTTPException
 from sqlalchemy import select
 from sqlalchemy.exc import IntegrityError
 from sqlalchemy.ext.asyncio import AsyncSession
+
+from app.db.session import get_db
+from app.models import NewsletterSubscriber
+from app.schemas.newsletter import NewsletterSubscribeIn, NewsletterSubscribeOut
 
 router = APIRouter(prefix="/newsletter", tags=["newsletter"])
 

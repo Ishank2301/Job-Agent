@@ -1,6 +1,6 @@
 "use client";
 
-import { useMemo, useState } from "react";
+import { useMemo, useState, useDeferredValue } from "react";
 import { useRouter } from "next/navigation";
 import { api } from "@/lib/api";
 import { Chip, EmptyState } from "@/components/ui/kit";
@@ -8,6 +8,7 @@ import { Chip, EmptyState } from "@/components/ui/kit";
 export function JobsBoard({ jobs }: { jobs: any[] }) {
   const router = useRouter();
   const [query, setQuery] = useState("");
+  const deferredQuery = useDeferredValue(query);
   const [source, setSource] = useState("all");
   const [expanded, setExpanded] = useState<string | null>(null);
   const [busy, setBusy] = useState<string | null>(null);
@@ -29,13 +30,13 @@ export function JobsBoard({ jobs }: { jobs: any[] }) {
   }, [jobs]);
 
   const filtered = useMemo(() => {
-    const q = query.toLowerCase();
+    const q = deferredQuery.toLowerCase();
     return processedJobs.filter((job) => {
       const matchesSource = source === "all" || job.source === source;
       const matchesQuery = q === "" || job._searchString.includes(q);
       return matchesSource && matchesQuery;
     });
-  }, [processedJobs, query, source]);
+  }, [processedJobs, deferredQuery, source]);
 
   async function scrape() {
     setScraping(true);
